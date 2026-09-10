@@ -62,14 +62,10 @@ Projeto individual.
 
 ## Documentos
 
-| Documento | Conteúdo |
-|---|---|
-| [`docs/proposta.md`](docs/proposta.md) | Proposta da Sprint 0: visão, MVP, backlog, stack e acordo de processo |
-| [`docs/sprint-0-artefatos.md`](docs/sprint-0-artefatos.md) | Backlog com critérios de aceitação, arquitetura planejada e detalhes do processo |
-| [`docs/roteiro-video-sprint-0.md`](docs/roteiro-video-sprint-0.md) | Roteiro falado do vídeo de 5 minutos |
-| [`docs/slides-video-sprint-0.pptx`](docs/slides-video-sprint-0.pptx) | Slides de apoio, com o roteiro nas notas do apresentador |
-
-- **Quadro (GitHub Projects):** ⟨link⟩
+- **Proposta da Sprint 0:** [`docs/proposta.md`](docs/proposta.md) — visão, MVP, backlog, stack e
+  acordo de processo
+- **Quadro (GitHub Projects):** ⟨link⟩ — backlog priorizado, com os critérios de aceitação em cada
+  história
 - **Vídeo da Sprint 0 (5 min):** ⟨link⟩
 
 ## Stack prevista

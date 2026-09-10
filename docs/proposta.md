@@ -5,8 +5,6 @@ projeto individual · **Coorte B (online)** · DIM0510 — 2026.2
 
 **Repositório** github.com/MatheusSCristo/EntregaAi · **Quadro** ⟨link do Projects⟩ · **Vídeo** ⟨link⟩
 
-Backlog com critérios de aceitação e arquitetura: [`docs/sprint-0-artefatos.md`](sprint-0-artefatos.md).
-
 ---
 
 ## 1. Visão do produto
@@ -81,8 +79,8 @@ validando os 4 dígitos. E todo item P1 está em **Pronto** conforme a seção 5
 
 ## 3. Backlog inicial
 
-No **GitHub Projects** deste repositório: **⟨link do quadro⟩**. Critérios de aceitação em
-[`docs/sprint-0-artefatos.md`](sprint-0-artefatos.md#t4--backlog-inicial).
+No **GitHub Projects** deste repositório: **⟨link do quadro⟩** — é lá que vivem os critérios de
+aceitação de cada história.
 
 10 histórias, todas priorizadas e estimadas (Fibonacci), mais 4 `chore` de infraestrutura.
 
