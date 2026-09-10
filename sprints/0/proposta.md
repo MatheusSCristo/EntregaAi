@@ -3,7 +3,9 @@
 **Matheus Senas de Cristo** · 20240002384 · [@MatheusSCristo](https://github.com/MatheusSCristo) ·
 projeto individual · **Coorte B (online)** · DIM0510 — 2026.2
 
-**Repositório** github.com/MatheusSCristo/EntregaAi · **Quadro** ⟨link do Projects⟩ · **Vídeo** ⟨link⟩
+**Repositório** github.com/MatheusSCristo/EntregaAi · 
+**Quadro** https://github.com/MatheusSCristo/EntregaAi/wiki/Backlog · 
+**Vídeo** [⟨link⟩](https://github.com/MatheusSCristo/EntregaAi/blob/main/sprints/0/Sprint0.mp4)
 
 ---
 
