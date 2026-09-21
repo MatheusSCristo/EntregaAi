@@ -116,12 +116,12 @@ Acordo completo: [`docs/proposta.md`](docs/proposta.md#5-acordo-de-processo).
 ## Checklist das sprints
 
 ### Sprint 0
-- [ ] Repositório público + README completo
-- [ ] `docs/proposta.md` (≤3 pág.)
-- [ ] GitHub Projects com ≥5 itens, ≥3 estimados
-- [ ] Coorte declarada (A=presencial / B=online)
+- [x] Repositório público + README completo
+- [x] `docs/proposta.md` (≤3 pág.)
+- [x] GitHub Projects com ≥5 itens, ≥3 estimados
+- [x] Coorte declarada (A=presencial / B=online)
 - [ ] Integração com outra disciplina declarada (se houver)
-- [ ] Vídeo 5 min
+- [x] Vídeo 5 min
 
 ### Sprint 1
 - [ ] Incremento funcional em `main`
