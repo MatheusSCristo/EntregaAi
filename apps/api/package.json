@@ -9,9 +9,9 @@
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,test}/**/*.ts\"",
     "test": "jest",
-    "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate dev",
-    "db:seed": "prisma db seed"
+    "db:generate": "node scripts/prisma.js generate",
+    "db:migrate": "node scripts/prisma.js migrate dev",
+    "db:seed": "node scripts/prisma.js db seed"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.18",

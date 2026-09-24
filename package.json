@@ -22,5 +22,8 @@
     "lodash": "^4.17.21",
     "turbo": "^2.6.1",
     "zod": "^4.6.5"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.3"
   }
 }
