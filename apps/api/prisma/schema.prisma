@@ -31,7 +31,7 @@ model Condominio {
 model Unidade {
   id           String    @id @default(uuid()) @db.Uuid
   condominioId String    @map("condominio_id") @db.Uuid
-  bloco        String?
+  bloco        String
   numero       String
   ativo        Boolean   @default(true)
   createdAt    DateTime  @default(now()) @map("created_at")
