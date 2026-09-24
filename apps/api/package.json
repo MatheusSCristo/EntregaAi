@@ -8,13 +8,17 @@
     "start": "nest start",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,test}/**/*.ts\"",
-    "test": "jest"
+    "test": "jest",
+    "db:generate": "node scripts/prisma.js generate",
+    "db:migrate": "node scripts/prisma.js migrate dev",
+    "db:seed": "node scripts/prisma.js db seed"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.18",
     "@nestjs/config": "^4.0.3",
     "@nestjs/core": "^11.1.18",
     "@nestjs/platform-express": "^11.0.1",
+    "@prisma/client": "^6.19.3",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2"
   },
@@ -33,9 +37,11 @@
     "jest": "^30.0.0",
     "lodash": "^4.17.21",
     "prettier": "^3.4.2",
+    "prisma": "^6.19.3",
     "supertest": "^7.0.0",
     "ts-jest": "^29.2.5",
     "ts-loader": "^9.5.2",
+    "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.20.0"

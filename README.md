@@ -6,8 +6,8 @@ automaticamente. A retirada é validada pelos 4 últimos dígitos do telefone do
 
 > Projeto acadêmico da disciplina **DIM0510 — Processos de Software** · 2026.2 · UFRN
 
-**Status: Sprint 0 (planejamento).** Ainda não há código neste repositório — o primeiro incremento
-executável chega na Sprint 1. O que existe hoje são os artefatos de planejamento em [`docs/`](docs/).
+**Status: Sprint 1 (base técnica).** O repositório agora tem a estrutura inicial do monorepo com
+API, front-end, banco local e seed do condomínio para preparar o primeiro incremento funcional.
 
 ---
 
@@ -85,18 +85,24 @@ Justificativa de cada escolha: [`docs/proposta.md`](docs/proposta.md#4-stack-tec
 
 ## Como rodar
 
-Será preenchido na Sprint 1, quando existir o primeiro incremento. O fluxo planejado:
+Fluxo local da base criada para a Sprint 1:
 
 ```bash
 git clone https://github.com/MatheusSCristo/EntregaAi.git
 cd EntregaAi
-cp apps/api/.env.example apps/api/.env   # preencha as chaves
-docker compose up -d                     # Postgres, Redis e provedor de WhatsApp
+cp apps/api/.env.example apps/api/.env
+docker compose up -d                     # Postgres e Redis
 npm install
-npm run db:migrate                        # cria o schema
-npm run db:seed                           # condomínio, unidades e moradores pré-cadastrados
-npm run dev                               # API em :3000 · web em :5173
+npm run db:migrate                       # cria o schema
+npm run db:seed                          # condomínio, unidades e moradores pré-cadastrados
+npm run dev                              # API em :3000 · web em :5173
 ```
+
+Aplicações:
+
+- API NestJS: `apps/api`
+- Web React/Vite: `apps/web`
+- Banco PostgreSQL e Redis: `docker-compose.yml`
 
 ## Processo
 
