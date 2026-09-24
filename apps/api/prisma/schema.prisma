@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum StatusEncomenda {
+  pendente
+  entregue
+  extraviada
+}
+
+model Condominio {
+  id        String    @id @default(uuid()) @db.Uuid
+  nome      String    @unique
+  endereco  String
+  cidade    String
+  estado    String
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  unidades   Unidade[]
+  encomendas Encomenda[]
+
+  @@map("condominios")
+}
+
+model Unidade {
+  id           String    @id @default(uuid()) @db.Uuid
+  condominioId String    @map("condominio_id") @db.Uuid
+  bloco        String?
+  numero       String
+  ativo        Boolean   @default(true)
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  condominio Condominio  @relation(fields: [condominioId], references: [id])
+  moradores  Morador[]
+  encomendas Encomenda[]
+
+  @@unique([condominioId, bloco, numero])
+  @@index([condominioId])
+  @@map("unidades")
+}
+
+model Morador {
+  id                String    @id @default(uuid()) @db.Uuid
+  unidadeId         String    @map("unidade_id") @db.Uuid
+  nome              String
+  telefonePrincipal String    @map("telefone_principal")
+  ativo             Boolean   @default(true)
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  unidade    Unidade     @relation(fields: [unidadeId], references: [id])
+  encomendas Encomenda[]
+
+  @@index([unidadeId])
+  @@map("moradores")
+}
+
+model Encomenda {
+  id                 String          @id @default(uuid()) @db.Uuid
+  condominioId       String          @map("condominio_id") @db.Uuid
+  unidadeId          String          @map("unidade_id") @db.Uuid
+  moradorId          String          @map("morador_id") @db.Uuid
+  status             StatusEncomenda @default(pendente)
+  localArmazenamento String          @map("local_armazenamento")
+  observacao         String?
+  remetente          String?
+  createdAt          DateTime        @default(now()) @map("created_at")
+  updatedAt          DateTime        @updatedAt @map("updated_at")
+
+  condominio Condominio @relation(fields: [condominioId], references: [id])
+  unidade    Unidade    @relation(fields: [unidadeId], references: [id])
+  morador    Morador    @relation(fields: [moradorId], references: [id])
+
+  @@index([condominioId, status])
+  @@index([unidadeId])
+  @@index([moradorId])
+  @@map("encomendas")
+}
