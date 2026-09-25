@@ -26,6 +26,9 @@ jobs:
       - name: Install dependencies
         run: npm install --include=optional
 
+      - name: Install Linux Rolldown binding
+        run: npm install @rolldown/binding-linux-x64-gnu@1.2.9 --no-save --include=optional
+
       - name: Generate Prisma client
         run: npm run db:generate
 
