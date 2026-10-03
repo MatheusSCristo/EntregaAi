@@ -204,7 +204,12 @@ function App() {
           </label>
 
           {feedback ? (
-            <p className={`feedback ${feedback.tipo}`}>{feedback.mensagem}</p>
+            <p
+              className={`feedback ${feedback.tipo}`}
+              role={feedback.tipo === 'erro' ? 'alert' : 'status'}
+            >
+              {feedback.mensagem}
+            </p>
           ) : null}
 
           <button type="submit" disabled={carregando || salvando}>

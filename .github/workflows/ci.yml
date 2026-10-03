@@ -24,13 +24,16 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm install --package-lock=false --include=optional
+        run: npm ci --include=optional
 
       - name: Generate Prisma client
         run: npm run db:generate
 
       - name: Lint
         run: npm run lint
+
+      - name: Test
+        run: npm test
 
       - name: Build
         run: npm run build
