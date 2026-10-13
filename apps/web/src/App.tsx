@@ -40,6 +40,7 @@ type Feedback = {
 function App() {
   const [destinatarios, setDestinatarios] = useState<Destinatario[]>([]);
   const [pendentes, setPendentes] = useState<Encomenda[]>([]);
+  const [buscaDestinatario, setBuscaDestinatario] = useState('');
   const [moradorId, setMoradorId] = useState('');
   const [localArmazenamento, setLocalArmazenamento] = useState('');
   const [remetente, setRemetente] = useState('');
@@ -52,6 +53,29 @@ function App() {
     () => destinatarios.find((destinatario) => destinatario.id === moradorId),
     [destinatarios, moradorId],
   );
+
+  const destinatariosFiltrados = useMemo(() => {
+    const termo = buscaDestinatario.trim().toLocaleLowerCase('pt-BR');
+
+    if (!termo) {
+      return destinatarios;
+    }
+
+    return destinatarios.filter((destinatario) => {
+      const unidade = `${destinatario.unidade.bloco} ${destinatario.unidade.numero}`;
+      const textoBusca = `${destinatario.nome} ${unidade} ${destinatario.telefoneFinal}`;
+
+      return textoBusca.toLocaleLowerCase('pt-BR').includes(termo);
+    });
+  }, [buscaDestinatario, destinatarios]);
+
+  const formularioBloqueado =
+    carregando || salvando || destinatariosFiltrados.length === 0;
+
+  const podeRegistrar =
+    Boolean(destinatarioSelecionado) &&
+    localArmazenamento.trim().length > 0 &&
+    !salvando;
 
   useEffect(() => {
     async function carregarDados() {
@@ -89,6 +113,15 @@ function App() {
     void carregarDados();
   }, []);
 
+  useEffect(() => {
+    if (
+      destinatariosFiltrados.length > 0 &&
+      !destinatariosFiltrados.some((destinatario) => destinatario.id === moradorId)
+    ) {
+      setMoradorId(destinatariosFiltrados[0].id);
+    }
+  }, [destinatariosFiltrados, moradorId]);
+
   async function registrarEncomenda(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setFeedback(null);
@@ -110,9 +143,9 @@ function App() {
         body: JSON.stringify({
           unidadeId: destinatarioSelecionado.unidade.id,
           moradorId: destinatarioSelecionado.id,
-          localArmazenamento,
-          remetente,
-          observacao,
+          localArmazenamento: localArmazenamento.trim(),
+          remetente: remetente.trim(),
+          observacao: observacao.trim(),
         }),
       });
 
@@ -143,34 +176,73 @@ function App() {
     <main className="app-shell">
       <header className="topbar">
         <div>
-          <span className="eyebrow">Portaria</span>
-          <h1>EntregaAi</h1>
+          <span className="eyebrow">Portaria · registro de encomenda</span>
+          <h1>EntregaAí</h1>
         </div>
-        <strong>{pendentes.length} pendentes</strong>
+        <div className="summary-card" aria-label="Resumo da portaria">
+          <span>Agora na portaria</span>
+          <strong>{pendentes.length} pendentes</strong>
+        </div>
       </header>
 
       <section className="workspace">
-        <form className="panel" onSubmit={registrarEncomenda}>
+        <form className="panel register-panel" onSubmit={registrarEncomenda}>
           <div className="panel-heading">
             <span>Novo recebimento</span>
-            <small>Dados do condomínio piloto</small>
+            <small>Informe quem deve retirar e onde a encomenda ficará guardada.</small>
           </div>
 
-          <label>
-            Destinatário
-            <select
-              value={moradorId}
-              onChange={(event) => setMoradorId(event.target.value)}
-              disabled={carregando || salvando}
-            >
-              {destinatarios.map((destinatario) => (
-                <option key={destinatario.id} value={destinatario.id}>
-                  Bloco {destinatario.unidade.bloco} - Ap.{' '}
-                  {destinatario.unidade.numero} - {destinatario.nome}
-                </option>
-              ))}
-            </select>
-          </label>
+          <div className="field-group">
+            <label>
+              Buscar destinatário
+              <input
+                value={buscaDestinatario}
+                onChange={(event) => setBuscaDestinatario(event.target.value)}
+                placeholder="Nome, bloco, apartamento ou final do telefone"
+                disabled={carregando || salvando}
+              />
+            </label>
+
+            <label>
+              Destinatário
+              <select
+                value={moradorId}
+                onChange={(event) => setMoradorId(event.target.value)}
+                disabled={formularioBloqueado}
+              >
+                {destinatariosFiltrados.map((destinatario) => (
+                  <option key={destinatario.id} value={destinatario.id}>
+                    Bloco {destinatario.unidade.bloco} - Ap.{' '}
+                    {destinatario.unidade.numero} - {destinatario.nome}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+
+          {destinatarioSelecionado ? (
+            <aside className="recipient-card" aria-label="Destinatário selecionado">
+              <div>
+                <span>Destinatário</span>
+                <strong>{destinatarioSelecionado.nome}</strong>
+              </div>
+              <div>
+                <span>Unidade</span>
+                <strong>
+                  Bloco {destinatarioSelecionado.unidade.bloco} · Ap.{' '}
+                  {destinatarioSelecionado.unidade.numero}
+                </strong>
+              </div>
+              <div>
+                <span>Validação</span>
+                <strong>Final {destinatarioSelecionado.telefoneFinal}</strong>
+              </div>
+            </aside>
+          ) : (
+            <p className="empty compact">
+              Nenhum destinatário encontrado para a busca informada.
+            </p>
+          )}
 
           <label>
             Local de armazenamento
@@ -178,7 +250,7 @@ function App() {
               required
               value={localArmazenamento}
               onChange={(event) => setLocalArmazenamento(event.target.value)}
-              placeholder="Ex.: Prateleira 2"
+              placeholder="Ex.: Armário A, prateleira 2"
               disabled={salvando}
             />
           </label>
@@ -188,7 +260,7 @@ function App() {
             <input
               value={remetente}
               onChange={(event) => setRemetente(event.target.value)}
-              placeholder="Ex.: Mercado Livre"
+              placeholder="Ex.: Mercado Livre, Correios, Amazon"
               disabled={salvando}
             />
           </label>
@@ -198,7 +270,7 @@ function App() {
             <textarea
               value={observacao}
               onChange={(event) => setObservacao(event.target.value)}
-              placeholder="Ex.: Caixa grande"
+              placeholder="Ex.: Caixa grande, frágil, precisa ficar em pé"
               disabled={salvando}
             />
           </label>
@@ -212,7 +284,7 @@ function App() {
             </p>
           ) : null}
 
-          <button type="submit" disabled={carregando || salvando}>
+          <button type="submit" disabled={carregando || !podeRegistrar}>
             {salvando ? 'Registrando...' : 'Registrar encomenda'}
           </button>
         </form>
@@ -226,25 +298,36 @@ function App() {
           {carregando ? (
             <p className="empty">Carregando portaria...</p>
           ) : pendentes.length === 0 ? (
-            <p className="empty">Nenhuma encomenda pendente.</p>
+            <div className="empty-state">
+              <strong>Nenhuma encomenda pendente.</strong>
+              <span>Quando um recebimento for registrado, ele aparecerá aqui.</span>
+            </div>
           ) : (
             <ul className="pending-list">
               {pendentes.map((encomenda) => (
                 <li key={encomenda.id}>
-                  <div>
-                    <strong>{encomenda.morador.nome}</strong>
-                    <span>
-                      Bloco {encomenda.unidade.bloco} - Ap.{' '}
-                      {encomenda.unidade.numero}
-                    </span>
+                  <div className="pending-main">
+                    <div>
+                      <strong>{encomenda.morador.nome}</strong>
+                      <span>
+                        Bloco {encomenda.unidade.bloco} · Ap.{' '}
+                        {encomenda.unidade.numero}
+                      </span>
+                    </div>
+                    <time dateTime={encomenda.createdAt}>
+                      {formatarDataHora(encomenda.createdAt)}
+                    </time>
                   </div>
-                  <div>
+                  <div className="pending-details">
                     <strong>{encomenda.localArmazenamento}</strong>
                     <span>
-                      {encomenda.remetente ?? 'Sem remetente'} - final{' '}
+                      {encomenda.remetente ?? 'Sem remetente'} · final{' '}
                       {encomenda.morador.telefoneFinal}
                     </span>
                   </div>
+                  {encomenda.observacao ? (
+                    <p className="pending-note">{encomenda.observacao}</p>
+                  ) : null}
                 </li>
               ))}
             </ul>
@@ -253,6 +336,15 @@ function App() {
       </section>
     </main>
   );
+}
+
+function formatarDataHora(value: string) {
+  return new Intl.DateTimeFormat('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(new Date(value));
 }
 
 export default App;

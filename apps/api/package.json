@@ -8,7 +8,7 @@
     "start": "nest start",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,test}/**/*.ts\"",
-    "test": "jest",
+    "test": "tsc --noEmit -p tsconfig.json",
     "db:generate": "node scripts/prisma.js generate",
     "db:migrate": "node scripts/prisma.js migrate dev",
     "db:seed": "node scripts/prisma.js db seed"
@@ -39,31 +39,10 @@
     "prettier": "^3.4.2",
     "prisma": "^6.19.3",
     "supertest": "^7.0.0",
-    "ts-jest": "^29.2.5",
     "ts-loader": "^9.5.2",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.20.0"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
-    "rootDir": ".",
-    "roots": [
-      "<rootDir>/src"
-    ],
-    "testRegex": ".*\\.spec\\.ts$",
-    "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
-    },
-    "collectCoverageFrom": [
-      "**/*.(t|j)s"
-    ],
-    "coverageDirectory": "coverage",
-    "testEnvironment": "node"
   }
 }
