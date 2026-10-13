@@ -4,7 +4,7 @@ module.exports = {
   roots: ['<rootDir>/src'],
   testRegex: '.*\\.spec\\.ts$',
   transform: {
-    '^.+\\.(t|j)s$': require.resolve('./jest.transformer.cjs'),
+    '^.+\\.(t|j)s$': require.resolve('./jest.transformer.js'),
   },
   collectCoverageFrom: ['**/*.(t|j)s'],
   coverageDirectory: 'coverage',
