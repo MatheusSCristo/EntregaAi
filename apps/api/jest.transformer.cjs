@@ -1,7 +1,6 @@
-const ts = require('typescript');
-
 module.exports = {
   process(sourceText, sourcePath) {
+    const ts = require('typescript');
     const result = ts.transpileModule(sourceText, {
       compilerOptions: {
         emitDecoratorMetadata: true,
