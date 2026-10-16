@@ -8,7 +8,7 @@
     "start": "nest start",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,test}/**/*.ts\"",
-    "test": "tsc --noEmit -p tsconfig.json",
+    "test": "tsc --noEmit -p tsconfig.json && jest --runInBand",
     "db:generate": "node scripts/prisma.js generate",
     "db:migrate": "node scripts/prisma.js migrate dev",
     "db:seed": "node scripts/prisma.js db seed"

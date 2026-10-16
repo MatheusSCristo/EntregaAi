@@ -46,6 +46,9 @@ function App() {
   const [remetente, setRemetente] = useState('');
   const [observacao, setObservacao] = useState('');
   const [carregando, setCarregando] = useState(true);
+  const [carregandoPendentes, setCarregandoPendentes] = useState(true);
+  const [erroPendentes, setErroPendentes] = useState(false);
+  const [tentativaPendentes, setTentativaPendentes] = useState(0);
   const [salvando, setSalvando] = useState(false);
   const [feedback, setFeedback] = useState<Feedback | null>(null);
 
@@ -83,22 +86,15 @@ function App() {
       setFeedback(null);
 
       try {
-        const [destinatariosResponse, pendentesResponse] = await Promise.all([
-          fetch(`${API_URL}/encomendas/destinatarios`),
-          fetch(`${API_URL}/encomendas/pendentes`),
-        ]);
+        const destinatariosResponse = await fetch(`${API_URL}/encomendas/destinatarios`);
 
-        if (!destinatariosResponse.ok || !pendentesResponse.ok) {
+        if (!destinatariosResponse.ok) {
           throw new Error('Falha ao carregar dados da portaria.');
         }
 
-        const [destinatariosData, pendentesData] = await Promise.all([
-          destinatariosResponse.json() as Promise<Destinatario[]>,
-          pendentesResponse.json() as Promise<Encomenda[]>,
-        ]);
+        const destinatariosData = await destinatariosResponse.json() as Destinatario[];
 
         setDestinatarios(destinatariosData);
-        setPendentes(pendentesData);
         setMoradorId(destinatariosData[0]?.id ?? '');
       } catch {
         setFeedback({
@@ -112,6 +108,31 @@ function App() {
 
     void carregarDados();
   }, []);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function carregarPendentes() {
+      setCarregandoPendentes(true);
+      setErroPendentes(false);
+
+      try {
+        const response = await fetch(`${API_URL}/encomendas/pendentes`, {
+          signal: controller.signal,
+        });
+        if (!response.ok) throw new Error('Falha ao carregar pendentes.');
+        const dados = await response.json() as Encomenda[];
+        if (!controller.signal.aborted) setPendentes(dados);
+      } catch {
+        if (!controller.signal.aborted) setErroPendentes(true);
+      } finally {
+        if (!controller.signal.aborted) setCarregandoPendentes(false);
+      }
+    }
+
+    void carregarPendentes();
+    return () => controller.abort();
+  }, [tentativaPendentes]);
 
   useEffect(() => {
     if (
@@ -155,6 +176,7 @@ function App() {
 
       const novaEncomenda = (await response.json()) as Encomenda;
       setPendentes((atuais) => [novaEncomenda, ...atuais]);
+      setTentativaPendentes((atual) => atual + 1);
       setLocalArmazenamento('');
       setRemetente('');
       setObservacao('');
@@ -181,7 +203,7 @@ function App() {
         </div>
         <div className="summary-card" aria-label="Resumo da portaria">
           <span>Agora na portaria</span>
-          <strong>{pendentes.length} pendentes</strong>
+          <strong>{carregandoPendentes ? 'Carregando...' : erroPendentes ? 'Lista indisponível' : `${pendentes.length} pendentes`}</strong>
         </div>
       </header>
 
@@ -289,14 +311,21 @@ function App() {
           </button>
         </form>
 
-        <section className="panel pending-panel">
+        <section className="panel pending-panel" aria-label="Encomendas pendentes" aria-busy={carregandoPendentes}>
           <div className="panel-heading">
             <span>Encomendas pendentes</span>
             <small>Mais recentes primeiro</small>
           </div>
 
-          {carregando ? (
-            <p className="empty">Carregando portaria...</p>
+          {carregandoPendentes ? (
+            <p className="empty" role="status">Carregando encomendas pendentes...</p>
+          ) : erroPendentes ? (
+            <div className="empty-state">
+              <p role="alert">Não foi possível carregar as encomendas pendentes.</p>
+              <button type="button" onClick={() => setTentativaPendentes((atual) => atual + 1)}>
+                Tentar novamente
+              </button>
+            </div>
           ) : pendentes.length === 0 ? (
             <div className="empty-state">
               <strong>Nenhuma encomenda pendente.</strong>
@@ -342,6 +371,7 @@ function formatarDataHora(value: string) {
   return new Intl.DateTimeFormat('pt-BR', {
     day: '2-digit',
     month: '2-digit',
+    year: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
   }).format(new Date(value));

@@ -104,6 +104,26 @@ Aplicações:
 - Web React/Vite: `apps/web`
 - Banco PostgreSQL e Redis: `docker-compose.yml`
 
+### Lista de encomendas pendentes (P03)
+
+A tela inicial consulta `GET /api/encomendas/pendentes` e mostra morador, bloco,
+apartamento, local de armazenamento e data/hora de recebimento, com as mais recentes
+primeiro. A consulta inclui somente o status `pendente`; encomendas `entregue` ou
+`extraviada` ficam fora da lista. Os registros são persistidos no PostgreSQL e
+consultados novamente ao recarregar a página. Após registrar uma encomenda, a lista
+é atualizada automaticamente. Falhas de consulta mostram uma opção de tentar novamente.
+
+Para conferir o fluxo localmente:
+
+1. Inicie o banco, execute as migrations e o seed e abra o app conforme os comandos acima.
+2. Registre uma encomenda e confira morador, unidade, local e horário na lista.
+3. Recarregue a página e confirme que a encomenda continua visível.
+4. Sem pendentes no banco, confira a mensagem de lista vazia. Com a API indisponível,
+   confira a mensagem de erro e use **Tentar novamente** após restabelecer a API.
+
+Execute `npm test` para verificar os testes da API, incluindo o filtro de status e
+os dados devolvidos pela consulta de pendentes.
+
 ## Processo
 
 - **Sprints de 2 semanas.** Planejamento na issue da sprint; registro diário de duas linhas;

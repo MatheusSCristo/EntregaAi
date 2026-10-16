@@ -20,6 +20,43 @@ describe('EncomendasService', () => {
     jest.clearAllMocks();
   });
 
+  it('lista apenas pendentes, mais recentes primeiro, com os dados da portaria', async () => {
+    const recebimento = new Date('2026-10-16T12:30:00.000Z');
+    prisma.encomenda.findMany.mockResolvedValue([{
+      id: 'encomenda-1',
+      status: StatusEncomenda.pendente,
+      localArmazenamento: 'Armário A',
+      observacao: null,
+      remetente: null,
+      createdAt: recebimento,
+      unidade: { id: 'unidade-1', bloco: 'A', numero: '101' },
+      morador: { id: 'morador-1', nome: 'Ana Clara Lima', telefonePrincipal: '84991234567' },
+    }]);
+
+    const resultado = await service.listarPendentes();
+
+    expect(prisma.encomenda.findMany).toHaveBeenCalledWith({
+      where: { status: StatusEncomenda.pendente },
+      orderBy: { createdAt: 'desc' },
+      include: { unidade: true, morador: true },
+    });
+    expect(resultado).toEqual([{
+      id: 'encomenda-1',
+      status: StatusEncomenda.pendente,
+      localArmazenamento: 'Armário A',
+      observacao: null,
+      remetente: null,
+      createdAt: recebimento,
+      unidade: { id: 'unidade-1', bloco: 'A', numero: '101' },
+      morador: { id: 'morador-1', nome: 'Ana Clara Lima', telefoneFinal: '4567' },
+    }]);
+  });
+
+  it('retorna uma lista vazia quando não há encomendas pendentes', async () => {
+    prisma.encomenda.findMany.mockResolvedValue([]);
+    await expect(service.listarPendentes()).resolves.toEqual([]);
+  });
+
   it('cria uma encomenda pendente para um morador ativo da unidade', async () => {
     prisma.morador.findFirst.mockResolvedValue({
       id: 'morador-1',
