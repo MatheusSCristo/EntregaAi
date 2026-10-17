@@ -180,6 +180,6 @@ apresentação não o substitui.
 - Publicar o vídeo e inserir um link acessível no README.
 - Preservar as fontes das métricas e explicitar a cobertura incompleta.
 
-**Vídeo preparado:** [video](../sprints/1/sprint-01.mp4).
+**Vídeo preparado:** [video](../1/sprint-01.mp4).
 
 **Repositório:** [MatheusSCristo/EntregaAi](https://github.com/MatheusSCristo/EntregaAi).
