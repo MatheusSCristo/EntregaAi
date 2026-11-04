@@ -3,7 +3,7 @@ import { defineConfig } from 'prisma/config';
 
 const databaseUrl =
   process.env.DATABASE_URL ??
-  'postgresql://postgres:postgres@localhost:5432/entregaai?schema=public';
+  'postgresql://postgres:postgres@localhost:5433/entregaai?schema=public';
 
 export default defineConfig({
   schema: 'prisma/schema.prisma',

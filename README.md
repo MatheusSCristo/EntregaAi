@@ -85,24 +85,41 @@ Justificativa de cada escolha: [`docs/proposta.md`](docs/proposta.md#4-stack-tec
 
 ## Como rodar
 
-Fluxo local da base criada para a Sprint 1:
+Pré-requisito: Docker Desktop (ou Docker Engine com Compose) em execução.
+Portas livres: 5173 (web), 3000 (API), 5433 (PostgreSQL) e 6379 (Redis).
+Não é necessário instalar Node, npm ou configurar `.env` para a demonstração.
 
 ```bash
 git clone https://github.com/MatheusSCristo/EntregaAi.git
 cd EntregaAi
-cp apps/api/.env.example apps/api/.env
-docker compose up -d                     # Postgres e Redis
-npm install
-npm run db:migrate                       # cria o schema
-npm run db:seed                          # condomínio, unidades e moradores pré-cadastrados
-npm run dev                              # API em :3000 · web em :5173
+docker compose up --build -d --wait
 ```
 
-Aplicações:
+Abra [a portaria](http://localhost:5173). A primeira construção baixa dependências;
+as próximas reutilizam as imagens. O Compose inicia banco e Redis, aplica migrations,
+cria dados de demonstração sem apagar os existentes e inicia API e web com health checks.
+A configuração é para demonstração local: portas acessíveis somente pela própria máquina.
 
-- API NestJS: `apps/api`
-- Web React/Vite: `apps/web`
-- Banco PostgreSQL e Redis: `docker-compose.yml`
+Escolha um morador, registre uma encomenda com local de armazenamento e recarregue
+a página. Para verificar persistência, execute `docker compose down`, depois
+`docker compose up -d --wait`: encomendas e moradores devem permanecer.
+`docker compose logs api` mostra falhas de inicialização. Para parar sem apagar
+os dados: `docker compose down`. A opção `down -v` apaga definitivamente os volumes.
+
+Para desenvolver com Node 22 e npm 10, mantenha apenas os serviços de infraestrutura:
+
+```bash
+docker compose up -d --wait postgres redis
+npm ci
+npm run db:generate
+npm run db:migrate
+npm run db:seed
+npm run dev
+```
+
+Nesse modo, copie `apps/api/.env.example` para `apps/api/.env` e use PostgreSQL
+em `localhost:5433`; ajuste a URL antes de migrar. Se os containers API/web estiverem
+rodando, pare-os antes de usar as mesmas portas no desenvolvimento local.
 
 ### Lista de encomendas pendentes (P03)
 
@@ -179,3 +196,5 @@ Acordo completo: [`docs/proposta.md`](docs/proposta.md#5-acordo-de-processo).
 - [ ] `docs/uso-de-ia.md`
 - [ ] Vídeo 10 min
 - [ ] Apresentação ao vivo
+
+Evidências da containerização: [verificação S2-01](docs/verificacao-s2-01.md).
