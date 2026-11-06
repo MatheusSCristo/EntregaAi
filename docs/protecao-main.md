@@ -28,4 +28,4 @@ Conferir Settings > Branches > main e os links acima. Este documento registra a 
 
 ## Registro de tempo
 
-Trabalho desta retomada em 06/11/2026, aproximadamente 15:16–15:22 (São Paulo), incluindo preparação isolada, aplicação e conferência da proteção, prova e documentação. Espera do CI da prova: 15:18:44–15:19:49 (65 segundos, incluída no intervalo anterior; não somar como processamento). Horários de início/fim do processamento são aproximados; timestamps do CI são verificáveis no run. A etapa de entrega aguarda CI e, depois, validação e merge pelo usuário.
+Retomada em 06/11/2026 (São Paulo). Processamento: preparação isolada, aplicação e conferência da proteção, prova e documentação; duração efetiva não cronometrada. Espera do CI da prova: 15:18:44–15:19:49 (65 segundos), conforme timestamps do run. Não derivar tempo de processamento das datas de coluna. A entrega aguarda CI e, depois, validação e merge pelo usuário.
