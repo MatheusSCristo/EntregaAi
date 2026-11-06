@@ -106,7 +106,7 @@ a página. Para verificar persistência, execute `docker compose down`, depois
 `docker compose logs api` mostra falhas de inicialização. Para parar sem apagar
 os dados: `docker compose down`. A opção `down -v` apaga definitivamente os volumes.
 
-Para desenvolver com Node 22 e npm 10, mantenha apenas os serviços de infraestrutura:
+Para desenvolver com Node 22.16.0 (`.nvmrc`) e npm 10.9.2 (`packageManager`), mantenha apenas os serviços de infraestrutura:
 
 ```bash
 docker compose up -d --wait postgres redis
@@ -198,3 +198,8 @@ Acordo completo: [`docs/proposta.md`](docs/proposta.md#5-acordo-de-processo).
 - [ ] Apresentação ao vivo
 
 Evidências da containerização: [verificação S2-01](docs/verificacao-s2-01.md).
+
+### CI reproduzível (S2-02)
+
+Em todo push e PR para main, o Actions usa Ubuntu 24.04, Node da .nvmrc e npm 10.9.2. A instalação limpa usa npm ci --include=optional com o lockfile versionado, seguida de geração Prisma, lint, testes e build. Para reproduzir: instale essas versões e execute npm ci --include=optional, npm run db:generate, npm run lint, npm test e npm run build em uma cópia limpa. Não é necessário banco para essas verificações.
+
