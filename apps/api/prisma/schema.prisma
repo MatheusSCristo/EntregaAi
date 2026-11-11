@@ -13,6 +13,11 @@ enum StatusEncomenda {
   extraviada
 }
 
+enum MetodoRetirada {
+  telefone
+  manual
+}
+
 model Condominio {
   id        String    @id @default(uuid()) @db.Uuid
   nome      String    @unique
@@ -70,6 +75,9 @@ model Encomenda {
   localArmazenamento String          @map("local_armazenamento")
   observacao         String?
   remetente          String?
+  retiradaEm         DateTime?       @map("retirada_em")
+  metodoRetirada     MetodoRetirada? @map("metodo_retirada")
+  justificativaRetirada String?      @map("justificativa_retirada")
   createdAt          DateTime        @default(now()) @map("created_at")
   updatedAt          DateTime        @updatedAt @map("updated_at")
 

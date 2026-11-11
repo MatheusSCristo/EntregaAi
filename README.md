@@ -141,6 +141,23 @@ Para conferir o fluxo localmente:
 Execute `npm test` para verificar os testes da API, incluindo o filtro de status e
 os dados devolvidos pela consulta de pendentes.
 
+### Retirada de encomenda na API (S2-05)
+
+Com as migrations aplicadas, envie `POST /api/encomendas/<id>/retirada` com
+`Content-Type: application/json` e um dos seguintes corpos.
+
+- Por telefone: `{"metodo":"telefone","codigo":"0042"}`. Envie o código como texto
+  para preservar zeros à esquerda. A API confere os quatro últimos dígitos do
+  telefone do morador vinculado à encomenda.
+- Manual: `{"metodo":"manual","justificativa":"Documento conferido na portaria"}`.
+  A justificativa é obrigatória.
+
+A resposta `200` contém `id`, `status` (`entregue`), `retiradaEm`,
+`metodoRetirada` e `justificativaRetirada`. Confira que a encomenda sai da lista
+de pendentes. Um código incorreto ou uma solicitação inválida retorna `400` e
+preserva o registro. Um ID válido sem encomenda retorna `404`. Uma encomenda
+fora do status pendente retorna `409`, inclusive em tentativas concorrentes.
+
 ## Processo
 
 - **Sprints de 2 semanas.** Planejamento na issue da sprint; registro diário de duas linhas;

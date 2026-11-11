@@ -1,11 +1,13 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { StatusEncomenda } from '@prisma/client';
+import { MetodoRetirada, StatusEncomenda } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CriarEncomendaDto } from './dto/criar-encomenda.dto';
+import { RetirarEncomendaDto } from './dto/retirar-encomenda.dto';
 
 @Injectable()
 export class EncomendasService {
@@ -122,6 +124,56 @@ export class EncomendasService {
         telefoneFinal: encomenda.morador.telefonePrincipal.slice(-4),
       },
     };
+  }
+
+  async retirar(id: string, dto: RetirarEncomendaDto) {
+    const encomenda = await this.prisma.encomenda.findUnique({
+      where: { id },
+      select: {
+        status: true,
+        morador: { select: { telefonePrincipal: true } },
+      },
+    });
+
+    if (!encomenda) {
+      throw new NotFoundException('Encomenda não encontrada.');
+    }
+
+    if (encomenda.status !== StatusEncomenda.pendente) {
+      throw new ConflictException('A encomenda não está pendente.');
+    }
+
+    let justificativaRetirada: string | null = null;
+    if (dto.metodo === MetodoRetirada.telefone) {
+      if (dto.justificativa !== undefined) {
+        throw new BadRequestException('A justificativa é exclusiva da retirada manual.');
+      }
+      const finalTelefone = encomenda.morador.telefonePrincipal.replace(/\D/g, '').slice(-4);
+      if (!dto.codigo || finalTelefone.length !== 4 || dto.codigo !== finalTelefone) {
+        throw new BadRequestException('Código de retirada incorreto.');
+      }
+    } else {
+      if (dto.codigo !== undefined) {
+        throw new BadRequestException('O código é exclusivo da retirada por telefone.');
+      }
+      justificativaRetirada = this.exigirTexto(dto.justificativa, 'justificativa');
+    }
+
+    const retirada = {
+      status: StatusEncomenda.entregue,
+      retiradaEm: new Date(),
+      metodoRetirada: dto.metodo,
+      justificativaRetirada,
+    };
+    const resultado = await this.prisma.encomenda.updateMany({
+      where: { id, status: StatusEncomenda.pendente },
+      data: retirada,
+    });
+    if (resultado.count === 0) {
+      throw new ConflictException('A encomenda não está mais pendente.');
+    }
+
+    return { id, ...retirada };
   }
 
   private exigirTexto(value: string | undefined, campo: string) {
