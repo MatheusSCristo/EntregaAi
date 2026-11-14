@@ -277,6 +277,32 @@ time {
   padding-left: 10px;
 }
 
+.pending-action {
+  justify-self: start;
+}
+
+.withdrawal-form {
+  display: grid;
+  gap: 12px;
+  border-top: 1px solid #e1e7ec;
+  padding-top: 14px;
+}
+
+.withdrawal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.secondary-button:not(:disabled) {
+  background: #e6efed;
+  color: #123c36;
+}
+
+.secondary-button:not(:disabled):hover {
+  background: #d6ece8;
+}
+
 @media (max-width: 840px) {
   .app-shell {
     padding: 24px 0;
