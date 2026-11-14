@@ -51,6 +51,9 @@ function App() {
   const [tentativaPendentes, setTentativaPendentes] = useState(0);
   const [salvando, setSalvando] = useState(false);
   const [feedback, setFeedback] = useState<Feedback | null>(null);
+  const [retiradaId, setRetiradaId] = useState<string | null>(null);
+  const [feedbackRetirada, setFeedbackRetirada] = useState('');
+  const retiradaAberta = pendentes.some(({ id }) => id === retiradaId);
 
   const destinatarioSelecionado = useMemo(
     () => destinatarios.find((destinatario) => destinatario.id === moradorId),
@@ -194,6 +197,13 @@ function App() {
     }
   }
 
+  function concluirRetirada(encomenda: Encomenda) {
+    setPendentes((atuais) => atuais.filter(({ id }) => id !== encomenda.id));
+    setRetiradaId(null);
+    setFeedbackRetirada(`Retirada registrada para ${encomenda.morador.nome}.`);
+    setTentativaPendentes((atual) => atual + 1);
+  }
+
   return (
     <main className="app-shell">
       <header className="topbar">
@@ -317,7 +327,9 @@ function App() {
             <small>Mais recentes primeiro</small>
           </div>
 
-          {carregandoPendentes ? (
+          {feedbackRetirada && <p className="feedback sucesso" role="status">{feedbackRetirada}</p>}
+
+          {carregandoPendentes && pendentes.length === 0 ? (
             <p className="empty" role="status">Carregando encomendas pendentes...</p>
           ) : erroPendentes ? (
             <div className="empty-state">
@@ -350,13 +362,31 @@ function App() {
                   <div className="pending-details">
                     <strong>{encomenda.localArmazenamento}</strong>
                     <span>
-                      {encomenda.remetente ?? 'Sem remetente'} · final{' '}
-                      {encomenda.morador.telefoneFinal}
+                      {encomenda.remetente ?? 'Sem remetente'}
                     </span>
                   </div>
                   {encomenda.observacao ? (
                     <p className="pending-note">{encomenda.observacao}</p>
                   ) : null}
+                  {retiradaId === encomenda.id ? (
+                    <FormularioRetirada
+                      encomendaId={encomenda.id}
+                      onCancelar={() => setRetiradaId(null)}
+                      onSucesso={() => concluirRetirada(encomenda)}
+                    />
+                  ) : (
+                    <button
+                      type="button"
+                      className="pending-action"
+                      disabled={retiradaAberta}
+                      onClick={() => {
+                        setFeedbackRetirada('');
+                        setRetiradaId(encomenda.id);
+                      }}
+                    >
+                      Registrar retirada
+                    </button>
+                  )}
                 </li>
               ))}
             </ul>
@@ -364,6 +394,113 @@ function App() {
         </section>
       </section>
     </main>
+  );
+}
+
+type FormularioRetiradaProps = {
+  encomendaId: string;
+  onCancelar: () => void;
+  onSucesso: () => void;
+};
+
+function FormularioRetirada({ encomendaId, onCancelar, onSucesso }: FormularioRetiradaProps) {
+  const [metodo, setMetodo] = useState<'telefone' | 'manual'>('telefone');
+  const [codigo, setCodigo] = useState('');
+  const [justificativa, setJustificativa] = useState('');
+  const [erro, setErro] = useState('');
+  const [enviando, setEnviando] = useState(false);
+
+  async function confirmar(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (enviando) return;
+
+    const motivo = justificativa.trim();
+    if (metodo === 'manual' && !motivo) {
+      setErro('Informe a justificativa da retirada manual.');
+      return;
+    }
+    if (metodo === 'telefone' && !/^[0-9]{4}$/.test(codigo)) {
+      setErro('Informe os quatro últimos dígitos do telefone.');
+      return;
+    }
+
+    setErro('');
+    setEnviando(true);
+    const dados = metodo === 'manual' ? { metodo, justificativa: motivo } : { metodo, codigo };
+    const mensagemPadrao = 'Não foi possível registrar a retirada.';
+
+    try {
+      const response = await fetch(`${API_URL}/encomendas/${encodeURIComponent(encomendaId)}/retirada`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dados),
+      });
+      if (response.ok) {
+        onSucesso();
+        return;
+      }
+
+      const erroApi = await response.json().catch(() => null);
+      setErro(response.status < 500 && typeof erroApi?.message === 'string'
+        ? erroApi.message
+        : mensagemPadrao);
+    } catch {
+      setErro(mensagemPadrao);
+    } finally {
+      setEnviando(false);
+    }
+  }
+
+  return (
+    <form className="withdrawal-form" onSubmit={confirmar} aria-label="Registrar retirada">
+      <label>
+        Método de retirada
+        <select
+          value={metodo}
+          disabled={enviando}
+          onChange={(event) => {
+            setMetodo(event.target.value === 'manual' ? 'manual' : 'telefone');
+            setErro('');
+          }}
+        >
+          <option value="telefone">Final do telefone</option>
+          <option value="manual">Retirada manual</option>
+        </select>
+      </label>
+      {metodo === 'telefone' ? (
+        <label>
+          Últimos quatro dígitos do telefone
+          <input
+            autoComplete="off"
+            inputMode="numeric"
+            maxLength={4}
+            required
+            value={codigo}
+            disabled={enviando}
+            onChange={(event) => setCodigo(event.target.value)}
+          />
+        </label>
+      ) : (
+        <label>
+          Justificativa da retirada manual
+          <textarea
+            required
+            value={justificativa}
+            disabled={enviando}
+            onChange={(event) => setJustificativa(event.target.value)}
+          />
+        </label>
+      )}
+      {erro && <p className="feedback erro" role="alert">{erro}</p>}
+      <div className="withdrawal-actions">
+        <button type="submit" disabled={enviando}>
+          {enviando ? 'Registrando...' : 'Confirmar retirada'}
+        </button>
+        <button type="button" className="secondary-button" disabled={enviando} onClick={onCancelar}>
+          Cancelar
+        </button>
+      </div>
+    </form>
   );
 }
 
