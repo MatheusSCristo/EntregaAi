@@ -117,6 +117,41 @@ h1 {
   top: 24px;
 }
 
+.register-panel.leitura-aberta {
+  position: static;
+}
+
+.photo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.label-fields {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid #d9e0e6;
+  border-radius: 6px;
+}
+
+.label-fields legend {
+  padding: 0 4px;
+  font-weight: 700;
+}
+
+.label-address {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.clear-label {
+  justify-self: start;
+}
+
 .panel-heading {
   display: grid;
   gap: 4px;

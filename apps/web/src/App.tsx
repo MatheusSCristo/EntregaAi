@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api';
 
@@ -37,6 +37,25 @@ type Feedback = {
   mensagem: string;
 };
 
+type CamposEtiqueta = {
+  bloco: string;
+  unidade: string;
+  destinatario: string;
+};
+
+type LeituraEtiqueta = {
+  campos: { [Campo in keyof CamposEtiqueta]: string | null } | null;
+  sugestao: Destinatario | null;
+};
+
+const camposVazios: CamposEtiqueta = { bloco: '', unidade: '', destinatario: '' };
+const limiteFoto = 5 * 1024 * 1024;
+const formatosFoto = 'image/jpeg,image/png,image/webp';
+
+function normalizarBusca(texto: string) {
+  return texto.normalize('NFD').replace(/\p{M}/gu, '').trim().toLowerCase().replace(/\s+/g, ' ');
+}
+
 function App() {
   const [destinatarios, setDestinatarios] = useState<Destinatario[]>([]);
   const [pendentes, setPendentes] = useState<Encomenda[]>([]);
@@ -51,17 +70,28 @@ function App() {
   const [tentativaPendentes, setTentativaPendentes] = useState(0);
   const [salvando, setSalvando] = useState(false);
   const [feedback, setFeedback] = useState<Feedback | null>(null);
+  const [camposEtiqueta, setCamposEtiqueta] = useState<CamposEtiqueta | null>(null);
+  const [lendoEtiqueta, setLendoEtiqueta] = useState(false);
+  const [feedbackLeitura, setFeedbackLeitura] = useState<Feedback | null>(null);
+  const camera = useRef<HTMLInputElement>(null);
+  const galeria = useRef<HTMLInputElement>(null);
   const [retiradaId, setRetiradaId] = useState<string | null>(null);
   const [feedbackRetirada, setFeedbackRetirada] = useState('');
   const retiradaAberta = pendentes.some(({ id }) => id === retiradaId);
 
-  const destinatarioSelecionado = useMemo(
-    () => destinatarios.find((destinatario) => destinatario.id === moradorId),
-    [destinatarios, moradorId],
-  );
-
   const destinatariosFiltrados = useMemo(() => {
-    const termo = buscaDestinatario.trim().toLocaleLowerCase('pt-BR');
+    if (camposEtiqueta) {
+      const bloco = normalizarBusca(camposEtiqueta.bloco);
+      const unidade = normalizarBusca(camposEtiqueta.unidade);
+      const nome = normalizarBusca(camposEtiqueta.destinatario);
+      return destinatarios.filter((destinatario) =>
+        normalizarBusca(destinatario.unidade.bloco).includes(bloco) &&
+        normalizarBusca(destinatario.unidade.numero).includes(unidade) &&
+        normalizarBusca(destinatario.nome).includes(nome),
+      );
+    }
+
+    const termo = normalizarBusca(buscaDestinatario);
 
     if (!termo) {
       return destinatarios;
@@ -71,17 +101,17 @@ function App() {
       const unidade = `${destinatario.unidade.bloco} ${destinatario.unidade.numero}`;
       const textoBusca = `${destinatario.nome} ${unidade} ${destinatario.telefoneFinal}`;
 
-      return textoBusca.toLocaleLowerCase('pt-BR').includes(termo);
+      return normalizarBusca(textoBusca).includes(termo);
     });
-  }, [buscaDestinatario, destinatarios]);
+  }, [buscaDestinatario, camposEtiqueta, destinatarios]);
 
-  const formularioBloqueado =
-    carregando || salvando || destinatariosFiltrados.length === 0;
+  const destinatarioSelecionado = destinatariosFiltrados.find((destinatario) => destinatario.id === moradorId);
+  const destinatarioBloqueado = carregando || salvando || lendoEtiqueta;
 
   const podeRegistrar =
     Boolean(destinatarioSelecionado) &&
     localArmazenamento.trim().length > 0 &&
-    !salvando;
+    !destinatarioBloqueado;
 
   useEffect(() => {
     async function carregarDados() {
@@ -139,15 +169,74 @@ function App() {
 
   useEffect(() => {
     if (
+      !camposEtiqueta &&
       destinatariosFiltrados.length > 0 &&
       !destinatariosFiltrados.some((destinatario) => destinatario.id === moradorId)
     ) {
       setMoradorId(destinatariosFiltrados[0].id);
     }
-  }, [destinatariosFiltrados, moradorId]);
+  }, [camposEtiqueta, destinatariosFiltrados, moradorId]);
+
+  function corrigirCampos(campos: CamposEtiqueta) {
+    setCamposEtiqueta(campos);
+    setMoradorId('');
+  }
+
+  async function lerEtiqueta(event: ChangeEvent<HTMLInputElement>) {
+    const foto = event.currentTarget.files?.[0];
+    event.currentTarget.value = '';
+    if (!foto || destinatarioBloqueado) return;
+
+    setFeedback(null);
+    setFeedbackLeitura(null);
+    setBuscaDestinatario('');
+    corrigirCampos(camposVazios);
+
+    if (foto.size > limiteFoto) {
+      setFeedbackLeitura({ tipo: 'erro', mensagem: 'A foto excede 5 MiB. Escolha outra ou preencha manualmente.' });
+      return;
+    }
+
+    setLendoEtiqueta(true);
+    const dados = new FormData();
+    dados.append('foto', foto);
+    try {
+      const response = await fetch(`${API_URL}/encomendas/leitura-etiqueta`, {
+        method: 'POST',
+        body: dados,
+        signal: AbortSignal.timeout(25_000),
+      });
+      if (response.status === 400) {
+        setFeedbackLeitura({ tipo: 'erro', mensagem: 'Use uma foto JPEG, PNG ou WebP válida, ou preencha manualmente.' });
+        return;
+      }
+      if (response.status === 413) {
+        setFeedbackLeitura({ tipo: 'erro', mensagem: 'A foto excede o limite de tamanho. Escolha outra ou preencha manualmente.' });
+        return;
+      }
+      if (!response.ok) throw new Error('Falha na leitura de etiqueta.');
+
+      const { campos, sugestao } = await response.json() as LeituraEtiqueta;
+      setCamposEtiqueta({
+        bloco: campos?.bloco ?? '',
+        unidade: campos?.unidade ?? '',
+        destinatario: campos?.destinatario ?? '',
+      });
+      const cadastrada = sugestao && destinatarios.some(({ id }) => id === sugestao.id);
+      setMoradorId(cadastrada ? sugestao.id : '');
+      setFeedbackLeitura(cadastrada
+        ? { tipo: 'sucesso', mensagem: 'Confira o destinatário e a unidade antes de registrar.' }
+        : { tipo: 'erro', mensagem: 'Leitura inconclusiva. Corrija os dados e selecione um destinatário cadastrado.' });
+    } catch {
+      setFeedbackLeitura({ tipo: 'erro', mensagem: 'Não foi possível ler a etiqueta. Tente outra foto ou preencha manualmente.' });
+    } finally {
+      setLendoEtiqueta(false);
+    }
+  }
 
   async function registrarEncomenda(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (destinatarioBloqueado) return;
     setFeedback(null);
 
     if (!destinatarioSelecionado) {
@@ -183,6 +272,8 @@ function App() {
       setLocalArmazenamento('');
       setRemetente('');
       setObservacao('');
+      setCamposEtiqueta(null);
+      setFeedbackLeitura(null);
       setFeedback({
         tipo: 'sucesso',
         mensagem: 'Encomenda registrada e adicionada aos pendentes.',
@@ -218,14 +309,65 @@ function App() {
       </header>
 
       <section className="workspace">
-        <form className="panel register-panel" onSubmit={registrarEncomenda}>
+        <form className={`panel register-panel${camposEtiqueta ? ' leitura-aberta' : ''}`} onSubmit={registrarEncomenda}>
           <div className="panel-heading">
             <span>Novo recebimento</span>
             <small>Informe quem deve retirar e onde a encomenda ficará guardada.</small>
           </div>
 
+          <div className="field-group" aria-label="Foto da etiqueta">
+            <div className="photo-actions">
+              <button type="button" className="secondary-button" disabled={destinatarioBloqueado}
+                onClick={() => camera.current?.click()}>
+                Fotografar etiqueta
+              </button>
+              <button type="button" className="secondary-button" disabled={destinatarioBloqueado}
+                onClick={() => galeria.current?.click()}>
+                Selecionar foto
+              </button>
+            </div>
+            <input ref={camera} type="file" aria-label="Câmera" accept={formatosFoto}
+              capture="environment" hidden onChange={lerEtiqueta} />
+            <input ref={galeria} type="file" aria-label="Galeria" accept={formatosFoto}
+              hidden onChange={lerEtiqueta} />
+            {lendoEtiqueta && <p className="empty" role="status">Lendo etiqueta...</p>}
+            {feedbackLeitura && (
+              <p className={`feedback ${feedbackLeitura.tipo}`}
+                role={feedbackLeitura.tipo === 'erro' ? 'alert' : 'status'}>
+                {feedbackLeitura.mensagem}
+              </p>
+            )}
+          </div>
+
           <div className="field-group">
-            <label>
+            {camposEtiqueta ? (
+              <fieldset className="label-fields" disabled={destinatarioBloqueado}>
+                <legend>Dados da etiqueta</legend>
+                <div className="label-address">
+                  <label>
+                    Bloco
+                    <input value={camposEtiqueta.bloco}
+                      onChange={(event) => corrigirCampos({ ...camposEtiqueta, bloco: event.target.value })} />
+                  </label>
+                  <label>
+                    Unidade
+                    <input value={camposEtiqueta.unidade}
+                      onChange={(event) => corrigirCampos({ ...camposEtiqueta, unidade: event.target.value })} />
+                  </label>
+                </div>
+                <label>
+                  Nome na etiqueta
+                  <input value={camposEtiqueta.destinatario}
+                    onChange={(event) => corrigirCampos({ ...camposEtiqueta, destinatario: event.target.value })} />
+                </label>
+                {Object.values(camposEtiqueta).some(Boolean) && (
+                  <button type="button" className="secondary-button clear-label"
+                    onClick={() => corrigirCampos(camposVazios)}>
+                    Limpar dados da etiqueta
+                  </button>
+                )}
+              </fieldset>
+            ) : <label>
               Buscar destinatário
               <input
                 value={buscaDestinatario}
@@ -233,15 +375,16 @@ function App() {
                 placeholder="Nome, bloco, apartamento ou final do telefone"
                 disabled={carregando || salvando}
               />
-            </label>
+            </label>}
 
             <label>
               Destinatário
               <select
-                value={moradorId}
+                value={destinatarioSelecionado?.id ?? ''}
                 onChange={(event) => setMoradorId(event.target.value)}
-                disabled={formularioBloqueado}
+                disabled={destinatarioBloqueado || destinatariosFiltrados.length === 0}
               >
+                <option value="" disabled>Selecione um destinatário</option>
                 {destinatariosFiltrados.map((destinatario) => (
                   <option key={destinatario.id} value={destinatario.id}>
                     Bloco {destinatario.unidade.bloco} - Ap.{' '}
@@ -270,11 +413,11 @@ function App() {
                 <strong>Final {destinatarioSelecionado.telefoneFinal}</strong>
               </div>
             </aside>
-          ) : (
+          ) : destinatariosFiltrados.length === 0 && !destinatarioBloqueado ? (
             <p className="empty compact">
               Nenhum destinatário encontrado para a busca informada.
             </p>
-          )}
+          ) : null}
 
           <label>
             Local de armazenamento
