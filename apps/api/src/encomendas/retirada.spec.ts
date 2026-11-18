@@ -5,6 +5,7 @@ import request from 'supertest';
 import { PrismaService } from '../prisma/prisma.service';
 import { EncomendasController } from './encomendas.controller';
 import { EncomendasService } from './encomendas.service';
+import { EtiquetasService } from './etiquetas.service';
 
 describe('POST /api/encomendas/:id/retirada', () => {
   const id = 'bcaf4694-19c1-464e-8d12-d57c28cb2639';
@@ -19,7 +20,11 @@ describe('POST /api/encomendas/:id/retirada', () => {
   beforeAll(async () => {
     const module = await Test.createTestingModule({
       controllers: [EncomendasController],
-      providers: [EncomendasService, { provide: PrismaService, useValue: prisma }],
+      providers: [
+        EncomendasService,
+        { provide: PrismaService, useValue: prisma },
+        { provide: EtiquetasService, useValue: {} },
+      ],
     }).compile();
     app = module.createNestApplication();
     app.setGlobalPrefix('api');
