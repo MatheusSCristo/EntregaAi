@@ -18,6 +18,14 @@ enum MetodoRetirada {
   manual
 }
 
+model LeituraEtiqueta {
+  id            String   @id @default(uuid()) @db.Uuid
+  respostaBruta String   @map("resposta_bruta")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@map("leituras_etiqueta")
+}
+
 model Condominio {
   id        String    @id @default(uuid()) @db.Uuid
   nome      String    @unique

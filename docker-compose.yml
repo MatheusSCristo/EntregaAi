@@ -8,6 +8,8 @@ services:
       REDIS_URL: redis://redis:6379
       WEB_ORIGIN: http://localhost:5173
       PORT: 3000
+      OPENAI_API_KEY: "${OPENAI_API_KEY:-}"
+      OPENAI_ETIQUETA_MODEL: "${OPENAI_ETIQUETA_MODEL:-gpt-4.1-mini}"
     ports:
       - "127.0.0.1:3000:3000"
     depends_on:

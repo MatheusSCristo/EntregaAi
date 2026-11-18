@@ -158,6 +158,32 @@ de pendentes. Um código incorreto ou uma solicitação inválida retorna `400` 
 preserva o registro. Um ID válido sem encomenda retorna `404`. Uma encomenda
 fora do status pendente retorna `409`, inclusive em tentativas concorrentes.
 
+### Leitura de etiqueta por foto na API (S2-07)
+
+Configure `OPENAI_API_KEY` em `apps/api/.env` para execução local. No Compose,
+defina a variável no ambiente do terminal ou no `.env` da raiz antes de subir a API.
+`OPENAI_ETIQUETA_MODEL` é opcional e usa `gpt-4.1-mini` por padrão.
+Aplique as migrations e carregue o seed conforme o modo de execução acima.
+
+Envie uma foto JPEG, PNG ou WebP de até 5 MiB no campo multipart `foto`.
+Para testar, use uma etiqueta fictícia com bloco, número e nome de um destinatário
+retornado por `GET /api/encomendas/destinatarios`.
+
+```sh
+curl -F "foto=@etiqueta.jpg" http://localhost:3000/api/encomendas/leitura-etiqueta
+```
+
+A API devolve `leituraId`, `campos`, `status` e `sugestao`. O status
+`aguardando_confirmacao` indica que bloco, número e nome correspondem a um único
+morador ativo de uma unidade ativa. Confirme os dados antes de registrar a encomenda
+pelo fluxo existente. Com `inconclusiva`, a portaria deve selecionar o destinatário
+manualmente. Foto inválida retorna 400, tamanho acima do limite retorna 413 e
+indisponibilidade do provedor retorna 503.
+
+A API envia ao provedor uma versão da foto com até 800 px no maior lado.
+A resposta bruta fica na tabela `leituras_etiqueta` para auditoria, identificada
+por `leituraId`. A foto é processada em memória.
+
 ## Processo
 
 - **Sprints de 2 semanas.** Planejamento na issue da sprint; registro diário de duas linhas;
