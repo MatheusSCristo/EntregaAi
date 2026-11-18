@@ -184,6 +184,19 @@ A API envia ao provedor uma versão da foto com até 800 px no maior lado.
 A resposta bruta fica na tabela `leituras_etiqueta` para auditoria, identificada
 por `leituraId`. A foto é processada em memória.
 
+### Recebimento por foto na portaria (S2-08)
+
+Em **Novo recebimento**, toque em **Fotografar etiqueta** para abrir a câmera
+traseira em celulares compatíveis, ou use **Selecionar foto**. Use JPEG, PNG
+ou WebP de até 5 MiB. Para testar a leitura, configure a chave conforme a seção
+anterior e use uma etiqueta fictícia com os dados de um morador do seed.
+
+Confira bloco, unidade e nome. Se editar os campos ou se a leitura falhar,
+selecione o destinatário no cadastro. **Limpar dados da etiqueta** volta a
+mostrar todas as opções. Preencha o local de armazenamento e clique em
+**Registrar encomenda**. Confira a nova encomenda nos pendentes e recarregue a
+página para verificar a persistência.
+
 ## Processo
 
 - **Sprints de 2 semanas.** Planejamento na issue da sprint; registro diário de duas linhas;
