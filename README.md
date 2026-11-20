@@ -197,6 +197,42 @@ mostrar todas as opções. Preencha o local de armazenamento e clique em
 **Registrar encomenda**. Confira a nova encomenda nos pendentes e recarregue a
 página para verificar a persistência.
 
+### WhatsApp simulado com fila (S2-09)
+
+O WhatsApp desta entrega é **fake, apenas para teste**, conforme decisão de escopo.
+Nenhuma mensagem real é enviada e não é necessário configurar provedor ou credenciais.
+Ao registrar uma encomenda, sua notificação entra na mesma transação do banco.
+Um consumidor verifica a fila a cada 2 segundos, sem aguardar o envio na resposta do cadastro.
+
+No Compose, o simulador funciona por padrão. Para desenvolvimento sem Docker,
+copie as opções de `apps/api/.env.example` para o `.env` da API. Nos pendentes,
+clique em **Atualizar status**: o resultado aparece como **WhatsApp (teste): Simulação concluída**.
+Encomendas anteriores à migração ficam sem notificação; não há disparo retroativo.
+
+| Opção | Valor padrão | Uso |
+| --- | --- | --- |
+| `WHATSAPP_PROVIDER` | `fake` | `disabled` pausa a fila sem consumir tentativas. |
+| `WHATSAPP_FAKE_MODE` | `sucesso` | `temporaria`, `permanente` ou `incerta` simulam falhas. |
+| `WHATSAPP_FAKE_FAILURES` | `1` | Quantas tentativas falham no modo `temporaria`, por notificação. |
+
+Para demonstrar retentativa, defina `WHATSAPP_FAKE_MODE=temporaria`, reinicie a API
+(no Compose: `docker compose up -d --force-recreate api`) e registre uma encomenda.
+A primeira tentativa falha; a segunda ocorre após pelo menos 60 segundos.
+Com `WHATSAPP_FAKE_FAILURES=3`, o item termina em falha após três tentativas,
+com esperas de 60 e 120 segundos. `permanente` termina na primeira tentativa.
+`incerta` exige conferência e não é reenviada automaticamente. As opções de
+modo se aplicam aos itens ainda na fila; itens concluídos não são reabertos.
+
+O estado, tentativas, horário da simulação e código de falha são consultáveis em
+`GET /api/encomendas/pendentes`, campo `notificacaoWhatsApp`, sem expor telefone completo.
+A fila usa PostgreSQL, dispensando uma segunda gravação no Redis. O adaptador
+é substituível; envio real e confirmação de recebimento não integram este escopo.
+
+Teste adicional com PostgreSQL e migrations aplicadas:
+`npm run test:whatsapp --workspace api`, com `DATABASE_URL` apontando a um banco
+de teste. O teste cria seus próprios dados fictícios e remove somente esses registros.
+Ele também roda no CI. Detalhes: [verificação S2-09](docs/verificacao-s2-09.md).
+
 ## Processo
 
 - **Sprints de 2 semanas.** Planejamento na issue da sprint; registro diário de duas linhas;

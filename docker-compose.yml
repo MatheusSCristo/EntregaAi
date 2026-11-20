@@ -10,6 +10,9 @@ services:
       PORT: 3000
       OPENAI_API_KEY: "${OPENAI_API_KEY:-}"
       OPENAI_ETIQUETA_MODEL: "${OPENAI_ETIQUETA_MODEL:-gpt-4.1-mini}"
+      WHATSAPP_PROVIDER: "${WHATSAPP_PROVIDER:-fake}"
+      WHATSAPP_FAKE_MODE: "${WHATSAPP_FAKE_MODE:-sucesso}"
+      WHATSAPP_FAKE_FAILURES: "${WHATSAPP_FAKE_FAILURES:-1}"
     ports:
       - "127.0.0.1:3000:3000"
     depends_on:

@@ -38,7 +38,8 @@ describe('EncomendasService', () => {
     expect(prisma.encomenda.findMany).toHaveBeenCalledWith({
       where: { status: StatusEncomenda.pendente },
       orderBy: { createdAt: 'desc' },
-      include: { unidade: true, morador: true },
+      include: { unidade: true, morador: true,
+        notificacaoWhatsApp: { select: { status: true, tentativas: true, ultimoErro: true, simuladaEm: true } } },
     });
     expect(resultado).toEqual([{
       id: 'encomenda-1',
@@ -47,6 +48,7 @@ describe('EncomendasService', () => {
       observacao: null,
       remetente: null,
       createdAt: recebimento,
+      notificacaoWhatsApp: null,
       unidade: { id: 'unidade-1', bloco: 'A', numero: '101' },
       morador: { id: 'morador-1', nome: 'Ana Clara Lima', telefoneFinal: '4567' },
     }]);
@@ -103,6 +105,10 @@ describe('EncomendasService', () => {
           moradorId: 'morador-1',
           localArmazenamento: 'Prateleira 2',
           remetente: 'Loja Exemplo',
+          notificacaoWhatsApp: { create: {
+            telefone: '84991234567', nome: 'Ana Clara Lima', bloco: 'A', unidade: '101',
+            local: 'Prateleira 2',
+          } },
         }),
       }),
     );

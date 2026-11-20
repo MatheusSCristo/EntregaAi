@@ -10,6 +10,20 @@ jobs:
   validate:
     name: Build, test and lint
     runs-on: ubuntu-24.04
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: entregaai_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d entregaai_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
 
     steps:
       - name: Checkout
@@ -38,6 +52,17 @@ jobs:
 
       - name: Test
         run: npm test
+
+      - name: Apply test database migrations
+        working-directory: apps/api
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/entregaai_test?schema=public
+        run: npx prisma migrate deploy
+
+      - name: Test WhatsApp queue with PostgreSQL
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/entregaai_test?schema=public
+        run: npm run test:whatsapp --workspace api
 
       - name: Build
         run: npm run build
