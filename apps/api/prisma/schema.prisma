@@ -18,6 +18,37 @@ enum MetodoRetirada {
   manual
 }
 
+enum StatusNotificacao {
+  pendente
+  enviando
+  simulada
+  falha
+  incerta
+}
+
+model NotificacaoWhatsApp {
+  id                String @id @default(uuid()) @db.Uuid
+  encomendaId       String @unique @map("encomenda_id") @db.Uuid
+  telefone          String
+  nome              String
+  bloco             String
+  unidade           String
+  local             String
+  status            StatusNotificacao @default(pendente)
+  tentativas        Int @default(0)
+  proximaTentativaEm DateTime @default(now()) @map("proxima_tentativa_em")
+  envioIniciadoEm   DateTime? @map("envio_iniciado_em")
+  simuladaEm        DateTime? @map("simulada_em")
+  provedorId        String? @map("provedor_id")
+  ultimoErro        String? @map("ultimo_erro")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+  encomenda         Encomenda @relation(fields: [encomendaId], references: [id])
+
+  @@index([status, proximaTentativaEm])
+  @@map("notificacoes_whatsapp")
+}
+
 model LeituraEtiqueta {
   id            String   @id @default(uuid()) @db.Uuid
   respostaBruta String   @map("resposta_bruta")
@@ -92,6 +123,7 @@ model Encomenda {
   condominio Condominio @relation(fields: [condominioId], references: [id])
   unidade    Unidade    @relation(fields: [unidadeId], references: [id])
   morador    Morador    @relation(fields: [moradorId], references: [id])
+  notificacaoWhatsApp NotificacaoWhatsApp?
 
   @@index([condominioId, status])
   @@index([unidadeId])
