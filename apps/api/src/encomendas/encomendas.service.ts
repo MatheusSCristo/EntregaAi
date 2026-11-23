@@ -20,6 +20,7 @@ export class EncomendasService {
       include: {
         unidade: true,
         morador: true,
+        notificacaoWhatsApp: { select: { status: true, tentativas: true, ultimoErro: true, simuladaEm: true } },
       },
     });
 
@@ -30,6 +31,7 @@ export class EncomendasService {
       observacao: encomenda.observacao,
       remetente: encomenda.remetente,
       createdAt: encomenda.createdAt,
+      notificacaoWhatsApp: encomenda.notificacaoWhatsApp ?? null,
       unidade: {
         id: encomenda.unidade.id,
         bloco: encomenda.unidade.bloco,
@@ -99,10 +101,20 @@ export class EncomendasService {
         localArmazenamento,
         observacao: this.normalizarOpcional(dto.observacao),
         remetente: this.normalizarOpcional(dto.remetente),
+        notificacaoWhatsApp: {
+          create: {
+            telefone: morador.telefonePrincipal,
+            nome: morador.nome,
+            bloco: morador.unidade.bloco,
+            unidade: morador.unidade.numero,
+            local: localArmazenamento,
+          },
+        },
       },
       include: {
         unidade: true,
         morador: true,
+        notificacaoWhatsApp: { select: { status: true, tentativas: true, ultimoErro: true, simuladaEm: true } },
       },
     });
 
@@ -113,6 +125,7 @@ export class EncomendasService {
       observacao: encomenda.observacao,
       remetente: encomenda.remetente,
       createdAt: encomenda.createdAt,
+      notificacaoWhatsApp: encomenda.notificacaoWhatsApp ?? null,
       unidade: {
         id: encomenda.unidade.id,
         bloco: encomenda.unidade.bloco,

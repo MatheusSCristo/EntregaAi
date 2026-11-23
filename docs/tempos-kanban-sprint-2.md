@@ -45,8 +45,21 @@ Os tempos da tabela representam o intervalo até o merge. A revisão pode ter oc
 | Data e hora | Em progresso (limite 1) | Em revisão (limite 2) | Sprint Backlog (limite 5) |
 | --- | --- | --- | --- |
 | 11/11/2026 19:20 | 1 (#16) | 0 | 1 (#17) |
+| 20/11/2026 11:31, antes de sincronizar #20 | 0 | 1 (#20; PR já integrado) | 1 (#21) |
+| 20/11/2026 11:31, após sincronização e início de #21 | 1 (#21) | 0 | 0 |
 
 A primeira amostra foi consultada após o início da #16. A série diária começa em 11/11. A amostra registra o estado observado naquele horário.
+
+### Trabalho e esperas da S2-09
+
+- 20/11/2026 11:31: início aproximado ao minuto, registrado na issue #21.
+- Provedor/credenciais foram perguntados enquanto o desenvolvimento independente
+  da fila prosseguia; não houve intervalo exclusivo de espera. O usuário escolheu
+  fake local e a decisão foi registrada na issue, eliminando a dependência externa.
+- 20/11/2026 11:43: fila, adaptador fake, testes unitários, integração PostgreSQL,
+  lint, build e teste HTTP concluídos. Documentação e preparação do PR continuaram.
+- O intervalo acima é uma janela de sessão, sem medição líquida de processamento.
+  As esperas de CI e validação serão registradas na issue com os respectivos links.
 
 ## Ação da retrospectiva 01
 

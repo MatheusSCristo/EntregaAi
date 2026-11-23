@@ -1,6 +1,10 @@
 import { ChangeEvent, FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api';
+const statusWhatsApp = {
+  pendente: 'Na fila de teste', enviando: 'Simulando envio', simulada: 'Simulação concluída',
+  falha: 'Falha no envio', incerta: 'Envio sem confirmação; confira antes de reenviar',
+};
 
 type Destinatario = {
   id: string;
@@ -20,6 +24,7 @@ type Encomenda = {
   observacao: string | null;
   remetente: string | null;
   createdAt: string;
+  notificacaoWhatsApp: { status: 'pendente' | 'enviando' | 'simulada' | 'falha' | 'incerta' } | null;
   unidade: {
     id: string;
     bloco: string;
@@ -468,6 +473,10 @@ function App() {
           <div className="panel-heading">
             <span>Encomendas pendentes</span>
             <small>Mais recentes primeiro</small>
+            <button type="button" className="secondary-button" disabled={carregandoPendentes}
+              onClick={() => setTentativaPendentes((atual) => atual + 1)}>
+              Atualizar status
+            </button>
           </div>
 
           {feedbackRetirada && <p className="feedback sucesso" role="status">{feedbackRetirada}</p>}
@@ -511,6 +520,11 @@ function App() {
                   {encomenda.observacao ? (
                     <p className="pending-note">{encomenda.observacao}</p>
                   ) : null}
+                  <p className="pending-note">
+                    WhatsApp (teste): {encomenda.notificacaoWhatsApp
+                      ? statusWhatsApp[encomenda.notificacaoWhatsApp.status]
+                      : 'Sem notificação registrada'}
+                  </p>
                   {retiradaId === encomenda.id ? (
                     <FormularioRetirada
                       encomendaId={encomenda.id}
