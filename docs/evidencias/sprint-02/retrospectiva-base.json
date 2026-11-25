@@ -1,0 +1,477 @@
+{
+  "schema_version": 1,
+  "collected_at": "2026-11-25T12:20:19.630Z",
+  "timezone": "America/Sao_Paulo",
+  "source_files": [
+    {
+      "path": "docs/retrospectiva-01.md",
+      "origin": "arquivo local preexistente, preservado sem alterações; retrospectiva 01 é minuta de 16/10/2026",
+      "sha256": "e331d353d9377e5786b37bfbe83a3476f7b285894a2c2aeb770710dfadf338c7",
+      "content": "# Retrospectiva 01 — EntregaAí\n\n**Data da preparação:** 16/10/2026. **Responsável:** Matheus Senas de Cristo.\n**Estado:** minuta baseada no repositório; validar antes de entregar como retrospectiva concluída.\n\n## Meta e resultado observado\n\nH01: registrar manualmente encomendas e consultar pendentes persistidos. API,\ntela e seed estão implementados na branch local. Integração final em `main`,\nexecução ponta a ponta e validação externa ainda precisam de confirmação.\n\n## Fatos\n\n- Base técnica e seed têm merges de PRs #7 e #8 em 23 e 24/09.\n- Workflow de integração contínua existe desde 25/09 (`67c9a6e`, PR #9).\n- Cadastro tem testes desde 02/10 (`7bd3dd9`) e merge do PR #10 (`c71f655`).\n- Em 13/10, o histórico registra várias correções de configuração Jest e\n  dependências nativas; uma nova correção aparece em 16/10 (`cb1fddf`).\n- P03 recebeu implementação complementar em 16/10 (`129252c`).\n- README apontava para `docs/proposta.md`, inexistente; a proposta está em `sprints/0/proposta.md`.\n\n## Métricas\n\n[Fonte, eventos e fórmulas](metricas-sprint-01.md). Dados das cinco issues #2–#6:\n\n- Lead time médio, definido como criação até fechamento da issue: **11,11 dias corridos**.\n- Throughput: **3** em 21–27/09, **0** em 28/09–04/10, **0** em 05–11/10 e **2** em 12–18/10 (coleta até 16/10).\n- Maior lead time: lista de pendentes (#6), **24,94 dias**.\n- Cycle time médio observado: **1,27 dias corridos**, apenas **2 dos 5 cartões**\n  têm início e Done registrados. Acesso ao Projects autorizado e fonte preservada.\n- Maior cycle time da amostra: P01 (#4), **60h42min17s**. Permanência em progresso:\n  48h35min59s; em revisão: 12h06min18s. Não separam trabalho efetivo de espera.\n- WIP médio total: não recuperável com segurança por transições ausentes.\n  Indicador complementar de PRs abertos em revisão: **0,00382**, com janela e\n  método documentados; não substitui WIP total.\n\nNão confundir lead time com tempo efetivamente trabalhado. A principal lacuna\né o registro incompleto de transições de #2, #3 e #5; a próxima sprint deve\nregistrar cada movimentação e amostrar WIP diariamente.\n\nAs datas foram recuperadas das issues, não estimadas a partir de commits.\n\n## Causas — hipótese para validar com 5 Porquês\n\nProblema observado: repetição de correções de CI/dependências.\n\n1. Por que houve retrabalho? O histórico mostra ajustes sucessivos de resolução de testes e bibliotecas nativas.\n2. Por que esses ajustes foram necessários? Hipótese: instalação e execução divergiram entre Windows e Linux.\n3. Por que a divergência não apareceu antes? Hipótese: faltou validar instalação limpa no ambiente do runner antes de integrar.\n4. Por que faltou essa validação? Hipótese: configuração do runtime e dependências não estava reproduzível.\n5. Por que persistiu? Hipótese: a rotina de aceite não tinha evidência registrada de instalação limpa.\n\nO histórico sustenta a repetição de correções; as causas precisam ser confirmadas\npelos logs do Actions e pelo autor. Não registrar essas hipóteses como conclusão de uma reunião.\n\n## Ações propostas (validar e criar cartões)\n\n| Ação | Responsável | Prazo | Critério de conclusão |\n|---|---|---|---|\n| Padronizar runtime e validar instalação limpa no Linux | Matheus | 19/10/2026 | PR com instruções, instalação limpa e CI verde |\n| Registrar datas de movimentação e WIP diário no Projects | Matheus | 19/10/2026 | Cartões da próxima sprint com datas e primeira amostra registrada |\n| Fazer teste externo do README antes da próxima review | Matheus | 23/10/2026 | Registro de pessoa, data, resultado e correções necessárias |\n\n## Antes de concluir este registro\n\n- Validar fatos e causas, preencher métricas com fontes e identificar a maior espera.\n- Criar os três cartões de ação e inserir suas URLs nesta tabela.\n- Registrar data da retrospectiva efetiva e decisões do responsável.\n"
+    },
+    {
+      "path": "docs/metricas-sprint-01.md",
+      "origin": "arquivo local preexistente, preservado sem alterações; retrospectiva 01 é minuta de 16/10/2026",
+      "sha256": "815a30565a5f40fef46eb3ad51d92ae57b41a246efd943cfeb3df589cce52014",
+      "content": "# Métricas de fluxo — Sprint 1\n\n## Resultado após autorização do Projects\n\nQuadro confirmado pela API: [Kanban](https://github.com/users/MatheusSCristo/projects/9).\nFonte das transições: [transicoes-projects.json](evidencias/sprint-01/transicoes-projects.json).\nEstado atual preservado em [quadro.json](evidencias/sprint-01/quadro.json).\nA API retornou `hasNextPage: false` para os cinco cartões: a lacuna não é paginação.\n\n| Indicador | Resultado | Cobertura e definição |\n|---|---|---|\n| Lead time médio | **11,11 dias corridos** | 5/5 issues, criação até fechamento |\n| Cycle time médio observado | **1,27 dias corridos** | Apenas 2/5 cartões com entrada em In progress e chegada em Done registradas |\n| Throughput semanal | **3, 0, 0, 2** | Semanas de 21/09, 28/09, 05/10 e 12/10; última parcial até 16/10 |\n| WIP médio total | **Não recuperável com segurança** | Faltam transições históricas de 3 cartões |\n| Tempo médio de revisão por PR | **27,41 minutos** | 5 PRs vinculados, abertura até merge; não equivale ao cycle time completo |\n\n### Cycle time verificável no quadro\n\nDatas no fuso de Brasília; duração em tempo corrido.\n\n| Cartão | Entrada em In progress | Entrada em Done | Cycle time |\n|---|---|---|---|\n| P01, issue #4 | 21/09/2026 21:03:51 | 24/09/2026 09:46:08 | 60h42min17s |\n| P03, issue #6 | 16/10/2026 19:14:06 | 16/10/2026 19:29:57 | 15min51s |\n\nMédia dos dois intervalos: 1,270185 dias. Não extrapolar para os cinco cartões.\nO ciclo observado mede a movimentação registrada; ele não prova que toda a\nimplementação ocorreu dentro desse intervalo.\n\nMaior cycle time da amostra: P01 (#4). Ficou **48h35min59s em In progress** e\n**12h06min18s em In review**. Essas permanências incluem trabalho e espera;\no histórico não permite separar horas produtivas de bloqueio.\n\n### Lacunas constatadas\n\n- #2: há entrada em In progress, mas falta evento de entrada em Done.\n- #3: não há evento de entrada em In progress nem de entrada em Done.\n- #5: não há evento de entrada em In progress nem de entrada em Done.\n- Os cinco cartões estão atualmente em Done. O estado atual não fornece as\n  datas das movimentações ausentes.\n\nComo indicador complementar, o **WIP médio de PRs abertos em revisão** foi\n0,00382 PR na janela de 21/09/2026 20:57:28 a 16/10/2026 19:29:57 (Brasília).\nMétodo: soma dos intervalos abertura→merge dos PRs #7, #8, #9, #11 e #12,\n8.224 segundos, dividida pela janela de 2.154.749 segundos. Inclui noites,\nfins de semana e períodos sem PR. Não substitui o WIP médio total do Kanban.\n\n**Ação para a próxima sprint:** registrar todas as entradas e saídas das colunas\ne manter amostras diárias de WIP. Não inventar retrospectivamente transições.\n\nAs seções seguintes preservam a coleta anterior. Os resultados acima substituem\nas afirmações anteriores de falta de autorização ou de indisponibilidade total\ndo cycle time. As lacunas de histórico continuam válidas.\n\n## Dados recuperados das issues em 16/10/2026\n\nFontes preservadas em [issues.json](evidencias/sprint-01/issues.json),\n[prs.json](evidencias/sprint-01/prs.json) e `timeline-N.json` no mesmo diretório.\nOs cinco cartões da captura correspondem às issues #2–#6. A história H01 (#1)\ncontinua aberta e não é contada novamente como entrega.\n\n**Lead time médio de criação até fechamento das issues: 11,11 dias corridos.**\nEste indicador usa criação da issue como entrada no sistema e fechamento como\nconclusão. Não é uma medida de horas efetivamente trabalhadas.\n\n| Cartão | Issue | Lead time (dias corridos) |\n|---|---|---|\n| Seed do condomínio | #2 | 2,53382 |\n| Configuração CI | #3 | 3,54067 |\n| Estrutura inicial | #4 | 2,53363 |\n| Tela de registro | #5 | 22,00145 |\n| Lista de pendentes | #6 | 24,93883 |\n\n**Throughput por semana**, segunda a domingo, no fuso de Brasília. Janela\nobservada: criação dos cartões em 21/09 até a coleta em 16/10. A última semana\nestá parcial, e os números não são extrapolados.\n\n| Semana | Cartões fechados |\n|---|---|\n| 21–27/09 | 3 |\n| 28/09–04/10 | 0 |\n| 05–11/10 | 0 |\n| 12–18/10 (até 16/10) | 2 |\n\nO maior lead time é o da lista de pendentes (#6): 24,94 dias. Isso não identifica\npor si só a coluna de maior espera. Os eventos REST confirmam movimentações do\nProjects, mas não retornam os nomes das colunas. Leitura de `previousStatus` e\n`status` pela API GraphQL depende da autorização `read:project`, solicitada ao\nautor. Cycle time e WIP médio do quadro ainda aguardam esses campos.\n\nAs seções abaixo preservam o método e o diagnóstico inicial; a disponibilidade\nde lead time e throughput acima substitui a indicação inicial de pendência\nintegral desses dois indicadores.\n\n## Fonte e limites\n\nA captura do Projects fornecida pelo autor mostra cinco cartões em Done e\nWIP instantâneo zero em progresso/revisão. Isso não permite calcular throughput\npor semana, WIP médio, lead time ou cycle time sem datas e transições.\n\nO histórico Git local comprova eventos de código, mas não fornece as datas de\nentrada no quadro ou todas as transições. Não confundir tempo entre commits com\nlead time ou cycle time dos cartões. Os valores abaixo não substituem T5.\n\n| Evento verificável | Data/hora (Brasília) | Evidência |\n|---|---|---|\n| Base técnica implementada | 23/09/2026 21:32:03 | `209bc60` |\n| Base técnica integrada por PR #7 | 23/09/2026 21:49:12 | `e472b3c` |\n| Seed implementado | 23/09/2026 21:32:59 | `b534b37` |\n| Seed integrado por PR #8 | 24/09/2026 09:45:45 | `3f0f1e6` |\n| Workflow CI implementado | 25/09/2026 09:38:31 | `67c9a6e` |\n| CI integrado por PR #9 | 25/09/2026 09:55:59 | `8b87d8b` |\n| Cadastro implementado | 02/10/2026 20:59:34 | `7bd3dd9` |\n| Cadastro integrado por PR #10 | 02/10/2026 21:46:32 | `c71f655` |\n| Tela de registro atualizada | 13/10/2026 19:16:59 | `5928ed4` |\n| Lista P03 completada na branch local | 16/10/2026 19:22:20 | `129252c` |\n\n## Dados a extrair antes do envio\n\nPara cada cartão, registrar URL, responsável, entrada no sistema, início em Em\nprogresso, término em Pronto e intervalos bloqueados, com fuso horário. A janela\nda sprint precisa ser confirmada no planejamento; o prazo adiado não define por\nsi só o início da medição.\n\n| Indicador | Método | Resultado nesta preparação |\n|---|---|---|\n| Lead time médio | Média de conclusão − entrada no sistema, apenas concluídos | Pendente: faltam datas de entrada |\n| Cycle time médio | Média de conclusão − primeiro início, incluindo esperas | Pendente: faltam transições dos cartões |\n| Throughput semanal | Cartões em Pronto por semana, inclusive semanas com zero | Pendente: faltam janela e datas de conclusão dos cartões |\n| WIP médio | Integral de cartões em progresso/revisão dividida pela duração da janela; alternativamente média de amostras diárias em horário fixo | Pendente: faltam amostras/transições |\n| Cartão mais demorado | Maior cycle time e coluna de maior espera | Pendente: commits isolados não identificam a espera |\n\nDeclarar dias corridos, critério da semana e método de amostragem. Cartões ainda\nabertos ficam fora das médias de concluídos, mas entram no WIP. Não contar cada\ncommit ou correção como cartão entregue. Copiar os resultados e links para a\nretrospectiva após a coleta.\n"
+    },
+    {
+      "path": "docs/evidencias/sprint-01/issues.json",
+      "origin": "arquivo local preexistente, preservado sem alterações; retrospectiva 01 é minuta de 16/10/2026",
+      "sha256": "b5a5cc4ed29c64eac6ab9c2455fb80b15ec153a496c597bad4acd02761f3206c",
+      "content": "[{\"closed_at\":\"2026-10-16T22:29:54Z\",\"created_at\":\"2026-09-21T23:57:59Z\",\"html_url\":\"https://github.com/MatheusSCristo/EntregaAi/issues/6\",\"number\":6,\"title\":\"P03 - Criar lista de encomendas pendentes\"},{\"closed_at\":\"2026-10-13T23:59:57Z\",\"created_at\":\"2026-09-21T23:57:52Z\",\"html_url\":\"https://github.com/MatheusSCristo/EntregaAi/issues/5\",\"number\":5,\"title\":\"P02 - Criar tela de registro de encomenda\"},{\"closed_at\":\"2026-09-24T12:46:09Z\",\"created_at\":\"2026-09-21T23:57:43Z\",\"html_url\":\"https://github.com/MatheusSCristo/EntregaAi/issues/4\",\"number\":4,\"title\":\"P01 - Criar estrutura inicial do projeto\"},{\"closed_at\":\"2026-09-25T12:56:08Z\",\"created_at\":\"2026-09-21T23:57:34Z\",\"html_url\":\"https://github.com/MatheusSCristo/EntregaAi/issues/3\",\"number\":3,\"title\":\"S02 - Configurar CI básico com gate em PR\"},{\"closed_at\":\"2026-09-24T12:46:08Z\",\"created_at\":\"2026-09-21T23:57:26Z\",\"html_url\":\"https://github.com/MatheusSCristo/EntregaAi/issues/2\",\"number\":2,\"title\":\"S01 - Criar seed do condomínio\"},{\"closed_at\":null,\"created_at\":\"2026-09-21T23:57:16Z\",\"html_url\":\"https://github.com/MatheusSCristo/EntregaAi/issues/1\",\"number\":1,\"title\":\"H01 - Registrar encomenda e listar pendentes\"}]\r\n"
+    },
+    {
+      "path": "docs/evidencias/sprint-01/prs.json",
+      "origin": "arquivo local preexistente, preservado sem alterações; retrospectiva 01 é minuta de 16/10/2026",
+      "sha256": "ad6872c85cbd464f9b8a44c1f301a8ff2c897b95054bb1e5e3372aa263196408",
+      "content": "[{\"created_at\":\"2026-10-16T22:23:13Z\",\"html_url\":\"https://github.com/MatheusSCristo/EntregaAi/pull/12\",\"merged_at\":\"2026-10-16T22:29:53Z\",\"number\":12,\"title\":\"P03 - Completar lista de encomendas pendentes\"},{\"created_at\":\"2026-10-13T22:31:03Z\",\"html_url\":\"https://github.com/MatheusSCristo/EntregaAi/pull/11\",\"merged_at\":\"2026-10-13T23:59:16Z\",\"number\":11,\"title\":\"P02 - Criar tela de registro de encomenda\"},{\"created_at\":\"2026-10-03T00:00:36Z\",\"html_url\":\"https://github.com/MatheusSCristo/EntregaAi/pull/10\",\"merged_at\":\"2026-10-03T00:46:33Z\",\"number\":10,\"title\":\"feat: add package intake flow\"},{\"created_at\":\"2026-09-25T12:38:47Z\",\"html_url\":\"https://github.com/MatheusSCristo/EntregaAi/pull/9\",\"merged_at\":\"2026-09-25T12:55:59Z\",\"number\":9,\"title\":\"S02 - Configurar CI básico com gate em PR\"},{\"created_at\":\"2026-09-24T12:34:37Z\",\"html_url\":\"https://github.com/MatheusSCristo/EntregaAi/pull/8\",\"merged_at\":\"2026-09-24T12:45:46Z\",\"number\":8,\"title\":\"S01 - Criar seed do condomínio\"},{\"created_at\":\"2026-09-24T00:35:22Z\",\"html_url\":\"https://github.com/MatheusSCristo/EntregaAi/pull/7\",\"merged_at\":\"2026-09-24T00:49:12Z\",\"number\":7,\"title\":\"P01 - Criar estrutura inicial do projeto\"}]\r\n"
+    },
+    {
+      "path": "docs/evidencias/sprint-01/transicoes-projects.json",
+      "origin": "arquivo local preexistente, preservado sem alterações; retrospectiva 01 é minuta de 16/10/2026",
+      "sha256": "8b945cfebd1b439dbfb4f883db84be59e34318019d578c3eb9b661c6c1458b8e",
+      "content": "{\"data\":{\"repository\":{\"i2\":{\"number\":2,\"title\":\"S01 - Criar seed do condomínio\",\"timelineItems\":{\"nodes\":[{\"__typename\":\"ProjectV2ItemStatusChangedEvent\",\"createdAt\":\"2026-09-21T23:57:28Z\",\"previousStatus\":\"\",\"status\":\"Backlog\",\"wasAutomated\":false,\"project\":{\"number\":9,\"title\":\"Kanban\",\"url\":\"https://github.com/users/MatheusSCristo/projects/9\"}},{\"__typename\":\"AddedToProjectV2Event\",\"createdAt\":\"2026-09-21T23:57:28Z\",\"project\":{\"number\":9,\"title\":\"Kanban\",\"url\":\"https://github.com/users/MatheusSCristo/projects/9\"}},{\"__typename\":\"ProjectV2ItemStatusChangedEvent\",\"createdAt\":\"2026-09-21T23:58:16Z\",\"previousStatus\":\"Backlog\",\"status\":\"Sprint Backlog\",\"wasAutomated\":false,\"project\":{\"number\":9,\"title\":\"Kanban\",\"url\":\"https://github.com/users/MatheusSCristo/projects/9\"}},{\"__typename\":\"ProjectV2ItemStatusChangedEvent\",\"createdAt\":\"2026-09-24T00:39:54Z\",\"previousStatus\":\"Sprint Backlog\",\"status\":\"In progress\",\"wasAutomated\":false,\"project\":{\"number\":9,\"title\":\"Kanban\",\"url\":\"https://github.com/users/MatheusSCristo/projects/9\"}}],\"pageInfo\":{\"hasNextPage\":false,\"endCursor\":\"Y3Vyc29yOnYyOpPPAAABoNDax5ABqzMxOTY1OTg5NTA1\"}}},\"i3\":{\"number\":3,\"title\":\"S02 - Configurar CI básico com gate em PR\",\"timelineItems\":{\"nodes\":[{\"__typename\":\"AddedToProjectV2Event\",\"createdAt\":\"2026-09-21T23:57:37Z\",\"project\":{\"number\":9,\"title\":\"Kanban\",\"url\":\"https://github.com/users/MatheusSCristo/projects/9\"}},{\"__typename\":\"ProjectV2ItemStatusChangedEvent\",\"createdAt\":\"2026-09-21T23:57:38Z\",\"previousStatus\":\"\",\"status\":\"Backlog\",\"wasAutomated\":false,\"project\":{\"number\":9,\"title\":\"Kanban\",\"url\":\"https://github.com/users/MatheusSCristo/projects/9\"}},{\"__typename\":\"ProjectV2ItemStatusChangedEvent\",\"createdAt\":\"2026-09-21T23:58:40Z\",\"previousStatus\":\"Backlog\",\"status\":\"Sprint Backlog\",\"wasAutomated\":false,\"project\":{\"number\":9,\"title\":\"Kanban\",\"url\":\"https://github.com/users/MatheusSCristo/projects/9\"}},{\"__typename\":\"ProjectV2ItemStatusChangedEvent\",\"createdAt\":\"2026-09-22T00:00:09Z\",\"previousStatus\":\"Sprint Backlog\",\"status\":\"Backlog\",\"wasAutomated\":false,\"project\":{\"number\":9,\"title\":\"Kanban\",\"url\":\"https://github.com/users/MatheusSCristo/projects/9\"}}],\"pageInfo\":{\"hasNextPage\":false,\"endCursor\":\"Y3Vyc29yOnYyOpPPAAABoMZpqygBqzMxNTY2NjUxNTE2\"}}},\"i4\":{\"number\":4,\"title\":\"P01 - Criar estrutura inicial do projeto\",\"timelineItems\":{\"nodes\":[{\"__typename\":\"AddedToProjectV2Event\",\"createdAt\":\"2026-09-21T23:57:45Z\",\"project\":{\"number\":9,\"title\":\"Kanban\",\"url\":\"https://github.com/users/MatheusSCristo/projects/9\"}},{\"__typename\":\"ProjectV2ItemStatusChangedEvent\",\"createdAt\":\"2026-09-21T23:57:47Z\",\"previousStatus\":\"\",\"status\":\"Backlog\",\"wasAutomated\":false,\"project\":{\"number\":9,\"title\":\"Kanban\",\"url\":\"https://github.com/users/MatheusSCristo/projects/9\"}},{\"__typename\":\"ProjectV2ItemStatusChangedEvent\",\"createdAt\":\"2026-09-21T23:58:12Z\",\"previousStatus\":\"Backlog\",\"status\":\"Sprint Backlog\",\"wasAutomated\":false,\"project\":{\"number\":9,\"title\":\"Kanban\",\"url\":\"https://github.com/users/MatheusSCristo/projects/9\"}},{\"__typename\":\"ProjectV2ItemStatusChangedEvent\",\"createdAt\":\"2026-09-22T00:03:51Z\",\"previousStatus\":\"Sprint Backlog\",\"status\":\"In progress\",\"wasAutomated\":false,\"project\":{\"number\":9,\"title\":\"Kanban\",\"url\":\"https://github.com/users/MatheusSCristo/projects/9\"}},{\"__typename\":\"ProjectV2ItemStatusChangedEvent\",\"createdAt\":\"2026-09-24T00:39:50Z\",\"previousStatus\":\"In progress\",\"status\":\"In review\",\"wasAutomated\":false,\"project\":{\"number\":9,\"title\":\"Kanban\",\"url\":\"https://github.com/users/MatheusSCristo/projects/9\"}},{\"__typename\":\"ProjectV2ItemStatusChangedEvent\",\"createdAt\":\"2026-09-24T12:46:08Z\",\"previousStatus\":\"In review\",\"status\":\"Done\",\"wasAutomated\":false,\"project\":{\"number\":9,\"title\":\"Kanban\",\"url\":\"https://github.com/users/MatheusSCristo/projects/9\"}}],\"pageInfo\":{\"hasNextPage\":false,\"endCursor\":\"Y3Vyc29yOnYyOpPPAAABoNNzqoABqzMxOTE0NTI2MTkz\"}}},\"i5\":{\"number\":5,\"title\":\"P02 - Criar tela de registro de encomenda\",\"timelineItems\":{\"nodes\":[{\"__typename\":\"AddedToProjectV2Event\",\"createdAt\":\"2026-09-21T23:57:53Z\",\"project\":{\"number\":9,\"title\":\"Kanban\",\"url\":\"https://github.com/users/MatheusSCristo/projects/9\"}},{\"__typename\":\"ProjectV2ItemStatusChangedEvent\",\"createdAt\":\"2026-09-21T23:57:55Z\",\"previousStatus\":\"\",\"status\":\"Backlog\",\"wasAutomated\":false,\"project\":{\"number\":9,\"title\":\"Kanban\",\"url\":\"https://github.com/users/MatheusSCristo/projects/9\"}},{\"__typename\":\"ProjectV2ItemStatusChangedEvent\",\"createdAt\":\"2026-09-21T23:58:20Z\",\"previousStatus\":\"Backlog\",\"status\":\"Sprint Backlog\",\"wasAutomated\":false,\"project\":{\"number\":9,\"title\":\"Kanban\",\"url\":\"https://github.com/users/MatheusSCristo/projects/9\"}}],\"pageInfo\":{\"hasNextPage\":false,\"endCursor\":\"Y3Vyc29yOnYyOpPPAAABoMZoAWABqzMxNTY2NjIyNTU3\"}}},\"i6\":{\"number\":6,\"title\":\"P03 - Criar lista de encomendas pendentes\",\"timelineItems\":{\"nodes\":[{\"__typename\":\"AddedToProjectV2Event\",\"createdAt\":\"2026-09-21T23:58:00Z\",\"project\":{\"number\":9,\"title\":\"Kanban\",\"url\":\"https://github.com/users/MatheusSCristo/projects/9\"}},{\"__typename\":\"ProjectV2ItemStatusChangedEvent\",\"createdAt\":\"2026-09-21T23:58:01Z\",\"previousStatus\":\"\",\"status\":\"Backlog\",\"wasAutomated\":false,\"project\":{\"number\":9,\"title\":\"Kanban\",\"url\":\"https://github.com/users/MatheusSCristo/projects/9\"}},{\"__typename\":\"ProjectV2ItemStatusChangedEvent\",\"createdAt\":\"2026-09-21T23:58:22Z\",\"previousStatus\":\"Backlog\",\"status\":\"Sprint Backlog\",\"wasAutomated\":false,\"project\":{\"number\":9,\"title\":\"Kanban\",\"url\":\"https://github.com/users/MatheusSCristo/projects/9\"}},{\"__typename\":\"ProjectV2ItemStatusChangedEvent\",\"createdAt\":\"2026-10-16T22:14:06Z\",\"previousStatus\":\"Sprint Backlog\",\"status\":\"In progress\",\"wasAutomated\":false,\"project\":{\"number\":9,\"title\":\"Kanban\",\"url\":\"https://github.com/users/MatheusSCristo/projects/9\"}},{\"__typename\":\"ProjectV2ItemStatusChangedEvent\",\"createdAt\":\"2026-10-16T22:29:57Z\",\"previousStatus\":\"In progress\",\"status\":\"Done\",\"wasAutomated\":false,\"project\":{\"number\":9,\"title\":\"Kanban\",\"url\":\"https://github.com/users/MatheusSCristo/projects/9\"}}],\"pageInfo\":{\"hasNextPage\":false,\"endCursor\":\"Y3Vyc29yOnYyOpPPAAABoUbWEogBqzMzNDg4NzkwMzIz\"}}}}}}\r\n"
+    }
+  ],
+  "sprint2_dora": {
+    "source": "https://github.com/MatheusSCristo/EntregaAi/blob/9bcb22985918c3a8e04efd9b1d12b8cceff90b99/docs/metricas-02.md",
+    "result": {
+      "window": {
+        "start": "2026-11-04T03:00:00Z",
+        "end": "2026-11-23T12:10:00Z",
+        "timezone": "America/Sao_Paulo",
+        "mainSha": "478ccaf7a6b7cd0587973c5cef9873535141e2bc"
+      },
+      "days": 19.381944444444443,
+      "deployments": 9,
+      "deployments_per_day": 0.46434969544965965,
+      "deployments_per_seven_days": 3.2504478681476177,
+      "commit_lead_time": {
+        "n": 12,
+        "min_seconds": 544,
+        "median_seconds": 1207,
+        "mean_seconds": 28647.916666666668,
+        "p90_seconds": 46350,
+        "max_seconds": 249772
+      },
+      "first_commit_per_pr_lead_time": {
+        "n": 9,
+        "min_seconds": 544,
+        "median_seconds": 1244,
+        "mean_seconds": 36762.88888888889,
+        "p90_seconds": 249772,
+        "max_seconds": 249772
+      },
+      "documented_change_failures": 1,
+      "documented_change_fail_rate_percent": 11.11111111111111,
+      "recovery_intervals": [
+        {
+          "id": "sharp-commonjs",
+          "failed_pr": 35,
+          "recovery_pr": 36,
+          "reported_at": "2026-11-18T12:32:23Z",
+          "recovered_proxy_at": "2026-11-18T12:44:02.000Z",
+          "report_to_corrected_ci_seconds": 699
+        }
+      ],
+      "ci": {
+        "total_runs": 35,
+        "failure_runs": 2,
+        "failure_percent": 5.714285714285714,
+        "intentional_failure_runs": 2,
+        "non_intentional_runs": 33,
+        "non_intentional_failure_runs": 0,
+        "excluded_dynamic_runs": 8
+      },
+      "weeks": [
+        {
+          "local_monday": "2026-11-02",
+          "observed_days": 5,
+          "deployments": 3,
+          "prs": [
+            28,
+            29,
+            31
+          ],
+          "documented_failures": 0
+        },
+        {
+          "local_monday": "2026-11-09",
+          "observed_days": 7,
+          "deployments": 3,
+          "prs": [
+            32,
+            33,
+            34
+          ],
+          "documented_failures": 0
+        },
+        {
+          "local_monday": "2026-11-16",
+          "observed_days": 7,
+          "deployments": 2,
+          "prs": [
+            35,
+            36
+          ],
+          "documented_failures": 1
+        },
+        {
+          "local_monday": "2026-11-23",
+          "observed_days": 0.3819444444444444,
+          "deployments": 1,
+          "prs": [
+            37
+          ],
+          "documented_failures": 0
+        }
+      ],
+      "rows": [
+        {
+          "pr": 28,
+          "first_commit_at": "2026-11-04T17:41:58.000Z",
+          "merged_at": "2026-11-04T22:55:47Z",
+          "deployed_at": "2026-11-04T22:57:13.000Z",
+          "merge_sha": "d4f5074f57de77c3346d6a0a5d171762e1fed6a0",
+          "run_id": 41929496550,
+          "lead_seconds": 18915,
+          "pr_open_to_merge_seconds": 18398,
+          "merge_to_ci_seconds": 86,
+          "commit_leads": [
+            {
+              "sha": "3d5bfd7ade0dd71adf9842cfd7524e9ea9fb1d38",
+              "committed_at": "2026-11-04T17:41:58Z",
+              "lead_seconds": 18915
+            }
+          ]
+        },
+        {
+          "pr": 29,
+          "first_commit_at": "2026-11-06T12:55:31.000Z",
+          "merged_at": "2026-11-06T13:14:46Z",
+          "deployed_at": "2026-11-06T13:16:15.000Z",
+          "merge_sha": "6b1a962d5414f8c213cea13eceaf4ce0a7ce3617",
+          "run_id": 42223945782,
+          "lead_seconds": 1244,
+          "pr_open_to_merge_seconds": 1119,
+          "merge_to_ci_seconds": 89,
+          "commit_leads": [
+            {
+              "sha": "ac74bf9afbb5551108ed8e345028e0ddd7d12a63",
+              "committed_at": "2026-11-06T12:55:31Z",
+              "lead_seconds": 1244
+            },
+            {
+              "sha": "e80e608b7f581b4e823b818bd3a4fabdca66b71e",
+              "committed_at": "2026-11-06T12:56:53Z",
+              "lead_seconds": 1162
+            }
+          ]
+        },
+        {
+          "pr": 31,
+          "first_commit_at": "2026-11-06T18:20:37.000Z",
+          "merged_at": "2026-11-06T21:24:37Z",
+          "deployed_at": "2026-11-06T21:26:06.000Z",
+          "merge_sha": "95d2e722d3ecf703cac2f200a26e09fcb893c6e8",
+          "run_id": 42296492186,
+          "lead_seconds": 11129,
+          "pr_open_to_merge_seconds": 11022,
+          "merge_to_ci_seconds": 89,
+          "commit_leads": [
+            {
+              "sha": "80c4889eee17f439af1f55531f5817ec3fcfe1bc",
+              "committed_at": "2026-11-06T18:20:37Z",
+              "lead_seconds": 11129
+            },
+            {
+              "sha": "5130afa3ac75007ebfca5d5b9984fb0aa2526ac6",
+              "committed_at": "2026-11-06T18:21:19Z",
+              "lead_seconds": 11087
+            }
+          ]
+        },
+        {
+          "pr": 32,
+          "first_commit_at": "2026-11-11T22:22:00.000Z",
+          "merged_at": "2026-11-11T22:29:37Z",
+          "deployed_at": "2026-11-11T22:31:04.000Z",
+          "merge_sha": "585d4d98b3c721d1f95816fbea3363e92d728bb7",
+          "run_id": 43112215256,
+          "lead_seconds": 544,
+          "pr_open_to_merge_seconds": 452,
+          "merge_to_ci_seconds": 87,
+          "commit_leads": [
+            {
+              "sha": "cf35c87cc4850a81e113d2017a915a50f6a4d433",
+              "committed_at": "2026-11-11T22:22:00Z",
+              "lead_seconds": 544
+            }
+          ]
+        },
+        {
+          "pr": 33,
+          "first_commit_at": "2026-11-11T22:33:21.000Z",
+          "merged_at": "2026-11-12T11:24:24Z",
+          "deployed_at": "2026-11-12T11:25:51.000Z",
+          "merge_sha": "6278b34bbbc8221c69293f37ce8701aa56fc22c5",
+          "run_id": 43208885779,
+          "lead_seconds": 46350,
+          "pr_open_to_merge_seconds": 46257,
+          "merge_to_ci_seconds": 87,
+          "commit_leads": [
+            {
+              "sha": "c0b8cb38c1d040e74c913c309ea594f8f77c8785",
+              "committed_at": "2026-11-11T22:33:21Z",
+              "lead_seconds": 46350
+            }
+          ]
+        },
+        {
+          "pr": 34,
+          "first_commit_at": "2026-11-14T16:59:31.000Z",
+          "merged_at": "2026-11-14T17:10:18Z",
+          "deployed_at": "2026-11-14T17:11:50.000Z",
+          "merge_sha": "08e359698f538f42902556b1c50dc56112ea25e0",
+          "run_id": 43619637705,
+          "lead_seconds": 739,
+          "pr_open_to_merge_seconds": 634,
+          "merge_to_ci_seconds": 92,
+          "commit_leads": [
+            {
+              "sha": "728b2db5d2b1b01fe59e60d4e1196cfa4d66f2f8",
+              "committed_at": "2026-11-14T16:59:31Z",
+              "lead_seconds": 739
+            }
+          ]
+        },
+        {
+          "pr": 35,
+          "first_commit_at": "2026-11-18T12:01:47.000Z",
+          "merged_at": "2026-11-18T12:19:40Z",
+          "deployed_at": "2026-11-18T12:21:17.000Z",
+          "merge_sha": "b3d9b671acc64f7f7467760f58f10a2b58ccb06b",
+          "run_id": 44302854752,
+          "lead_seconds": 1170,
+          "pr_open_to_merge_seconds": 1045,
+          "merge_to_ci_seconds": 97,
+          "commit_leads": [
+            {
+              "sha": "f411358824e6bab8ff491b1646a917f620adbd3b",
+              "committed_at": "2026-11-18T12:01:47Z",
+              "lead_seconds": 1170
+            }
+          ]
+        },
+        {
+          "pr": 36,
+          "first_commit_at": "2026-11-18T12:27:19.000Z",
+          "merged_at": "2026-11-18T12:43:05Z",
+          "deployed_at": "2026-11-18T12:44:02.000Z",
+          "merge_sha": "50a3d81ed541ec76ac58e109347eb091c974ae3f",
+          "run_id": 44306595258,
+          "lead_seconds": 1003,
+          "pr_open_to_merge_seconds": 919,
+          "merge_to_ci_seconds": 57,
+          "commit_leads": [
+            {
+              "sha": "4912a06140e5fd8ebd321a8ff9e471e169404a90",
+              "committed_at": "2026-11-18T12:27:19Z",
+              "lead_seconds": 1003
+            },
+            {
+              "sha": "808beb46312cf0f1434c87799df7d3b8f70528a1",
+              "committed_at": "2026-11-18T12:33:02Z",
+              "lead_seconds": 660
+            }
+          ]
+        },
+        {
+          "pr": 37,
+          "first_commit_at": "2026-11-20T14:44:28.000Z",
+          "merged_at": "2026-11-23T12:05:27Z",
+          "deployed_at": "2026-11-23T12:07:20.000Z",
+          "merge_sha": "478ccaf7a6b7cd0587973c5cef9873535141e2bc",
+          "run_id": 45171012662,
+          "lead_seconds": 249772,
+          "pr_open_to_merge_seconds": 249654,
+          "merge_to_ci_seconds": 113,
+          "commit_leads": [
+            {
+              "sha": "ecafb411fc3bf3a9d912c0512572408dc0941987",
+              "committed_at": "2026-11-20T14:44:28Z",
+              "lead_seconds": 249772
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "sprint2_flow": {
+    "source": "https://github.com/MatheusSCristo/EntregaAi/blob/7e6d13d/docs/fluxo-de-valor.md",
+    "pr": "https://github.com/MatheusSCristo/EntregaAi/pull/39",
+    "result": {
+      "rows": [
+        {
+          "issue": 13,
+          "processing_estimated_seconds": 1206,
+          "validation_window_seconds": 18221,
+          "lead_seconds": 19427,
+          "ci_execution_union_seconds": 116,
+          "efficiency_estimated_percent": 6.207855047099398,
+          "lead_hours": 5.396388888888889
+        },
+        {
+          "issue": 14,
+          "processing_estimated_seconds": 363,
+          "validation_window_seconds": 943,
+          "lead_seconds": 1306,
+          "ci_execution_union_seconds": 86,
+          "efficiency_estimated_percent": 27.7947932618683,
+          "lead_hours": 0.36277777777777775
+        },
+        {
+          "issue": 21,
+          "processing_estimated_seconds": 984,
+          "validation_window_seconds": 249483,
+          "lead_seconds": 250467,
+          "ci_execution_union_seconds": 90,
+          "efficiency_estimated_percent": 0.39286612607648913,
+          "lead_hours": 69.57416666666667
+        }
+      ],
+      "aggregate": {
+        "mean_lead_hours": 25.11111111111111,
+        "mean_processing_estimated_hours": 0.2363888888888889,
+        "mean_validation_window_hours": 24.87472222222222,
+        "mean_efficiency_estimated_percent": 11.465171478348063,
+        "weighted_efficiency_estimated_percent": 0.9413716814159292,
+        "validation_share_percent": 99.05862831858407
+      },
+      "caveat": "Eficiência estimada da janela de sessão, sem cronômetro de trabalho líquido; CI sobreposto não é somado. Lead = início registrado até merge, não criação da issue nem commit até produção."
+    }
+  },
+  "sprint2_mvp": {
+    "source": "https://github.com/MatheusSCristo/EntregaAi/blob/274ca05/docs/evidencias/sprint-02/mvp-validacao.json",
+    "pr": "https://github.com/MatheusSCristo/EntregaAi/pull/40",
+    "result": {
+      "schema_version": 1,
+      "collected_at": "2026-11-25T12:15:10.517Z",
+      "timezone": "America/Sao_Paulo",
+      "scope_change": {
+        "date": "2026-11-25",
+        "requested_by": "usuário no chat",
+        "external_tester": false,
+        "source": "https://github.com/MatheusSCristo/EntregaAi/issues/24#issuecomment-7161805763"
+      },
+      "compose": {
+        "inicio": "2026-11-25T12:09:06.1836574Z",
+        "fim": "2026-11-25T12:11:31.2638735Z",
+        "duracao_segundos": 145.0802161,
+        "projeto": "entregaai-s224",
+        "volumes_iniciais": 0
+      },
+      "compiled_flow": {
+        "resultado": "aprovado",
+        "inicio": "2026-11-25T12:11:51.270Z",
+        "fim": "2026-11-25T12:11:52.591Z",
+        "duracao_segundos": 1.321,
+        "ambiente": {
+          "node": "v22.23.4",
+          "banco": "PostgreSQL real",
+          "artefato": "NestJS compilado + Sharp real",
+          "leitura": "substituto injetado apenas no ensaio",
+          "whatsapp": "fake"
+        },
+        "teste_externo": false,
+        "chamadas_externas": false,
+        "etapas": [
+          "foto PNG real processada pelo Sharp compilado, auditada e relacionada ao cadastro; confirmação exigida",
+          "cadastro confirmado e WhatsApp fake concluído pelo consumidor periódico em uma tentativa",
+          "encomenda e estado da notificação persistem após reiniciar a aplicação de teste",
+          "código incorreto preserva pendência; código correto registra método/horário; repetição bloqueada e item removido dos pendentes",
+          "leitura parcial e falha de provedor permitem cadastro manual; retirada manual exige justificativa"
+        ]
+      },
+      "persistence": {
+        "resultado": "aprovado",
+        "web_http": 200,
+        "proxy_api": "aprovado",
+        "seed_antes": 4,
+        "seed_depois": 4,
+        "ids_preservados": true,
+        "encomenda_id": "cbf9f6fb-a5f7-4dbf-a732-4b1df0843282",
+        "encomenda_persistida": true,
+        "notificacao_status": "simulada",
+        "reinicio_inicio": "2026-11-25T12:13:12.2977543Z",
+        "reinicio_fim": "2026-11-25T12:13:38.2814061Z",
+        "reinicio_duracao_segundos": 25.9836518,
+        "volumes_removidos": false
+      },
+      "services": [
+        {
+          "service": "api",
+          "state": "running",
+          "health": "healthy",
+          "image": "entregaai-s224-api"
+        },
+        {
+          "service": "postgres",
+          "state": "running",
+          "health": "healthy",
+          "image": "postgres:16-alpine"
+        },
+        {
+          "service": "redis",
+          "state": "running",
+          "health": "healthy",
+          "image": "redis:7.4-alpine"
+        },
+        {
+          "service": "web",
+          "state": "running",
+          "health": "healthy",
+          "image": "entregaai-s224-web"
+        }
+      ],
+      "limitations": [
+        "sem pessoa externa ou medida de usabilidade humana",
+        "leitor de foto controlado somente no ensaio",
+        "sem avaliação ao vivo do modelo OpenAI",
+        "sem validação visual de câmera/celular",
+        "WhatsApp exclusivamente fake",
+        "build com imagens-base em cache; base PostgreSQL inicialmente vazia"
+      ],
+      "resolved_test_setup": [
+        {
+          "problem": "comando de ensaio usava /app/scripts, mas código está em /app/apps/api/scripts",
+          "correction": "docker compose exec -T api node apps/api/scripts/verificar-mvp.cjs",
+          "result": "aprovado"
+        },
+        {
+          "problem": "npm test dentro da imagem de runtime não pode gravar dist/tsconfig.tsbuildinfo do build",
+          "correction": "checagem tsc --noEmit --incremental false e Jest executados separadamente; código da aplicação inalterado"
+        }
+      ]
+    }
+  },
+  "user_decisions": [
+    {
+      "date": "2026-11-20",
+      "decision": "WhatsApp exclusivamente fake",
+      "source": "https://github.com/MatheusSCristo/EntregaAi/issues/21#issuecomment-7042266601"
+    },
+    {
+      "date": "2026-11-25",
+      "decision": "ninguém externo testará; validação local em substituição",
+      "source": "https://github.com/MatheusSCristo/EntregaAi/issues/24#issuecomment-7161805763"
+    }
+  ],
+  "human_review": {
+    "retrospective_meeting": "não registrada",
+    "functional_external_test": "não realizado por decisão do usuário",
+    "prior_merges": "realizados pelo usuário; merge não comprova teste funcional humano",
+    "current_prs_39_40": "aguardam validação/merge no momento da preparação"
+  }
+}
