@@ -30,7 +30,7 @@ exclusiva de cada linha ou esforço humano substituído.
 | 20–23/11, #21 | Fila PostgreSQL, retentativas e adaptador WhatsApp fake, com concorrência/recuperação | [PR #37](https://github.com/MatheusSCristo/EntregaAi/pull/37), [registro](verificacao-s2-09.md); o usuário pediu fake, sem envio real |
 | 23/11, #22 | Coleta normalizada, cálculo offline e relatório de métricas com proxy de implantação | [PR #38](https://github.com/MatheusSCristo/EntregaAi/pull/38), [métricas](metricas-02.md); relato Sharp e diffs sustentam inferência revisável, não telemetria de produção |
 | 25/11, #23 | Mapa de três itens, estimativas identificadas, cálculo de eficiência e proposta de melhoria | [PR #39](https://github.com/MatheusSCristo/EntregaAi/pull/39), [snapshot do fluxo](evidencias/sprint-02/retrospectiva-base.json); aprovação humana/merge pendentes na preparação |
-| 25/11, #24 | Ensaio do serviço compilado, PostgreSQL, Compose novo, reinício, revisão de README/licença e novo passo de CI | [PR #40](https://github.com/MatheusSCristo/EntregaAi/pull/40); o usuário dispensou pessoa externa; resultados não comprovam usabilidade humana |
+| 25/11, #24 | Ensaio local do serviço compilado, PostgreSQL, Compose novo, reinício e revisão de README/licença | [PR #40](https://github.com/MatheusSCristo/EntregaAi/pull/40); utilitário e passo adicional de CI retirados a pedido do usuário; não houve pessoa externa |
 | 25/11, #25 | Consolidação deste registro, preservação da minuta anterior, comparação das métricas e retrospectiva com três propostas | [Retrospectiva 02](retrospectiva-02.md) e cálculo reproduzível; conteúdo preparado pelo agente, sujeito à validação humana |
 
 ## Dificuldades, correções e limites
@@ -47,7 +47,9 @@ exclusiva de cada linha ou esforço humano substituído.
   tratado como comprovação de atualização do quadro.
 - **Defeito não detectado pelo CI original:** o código de leitura compilava,
   mas Sharp falhava em execução. O problema foi reproduzido e corrigido; a #24
-  adicionou ensaio do artefato compilado para cobrir essa lacuna.
+  executou um ensaio local do artefato compilado. O usuário pediu depois a
+  retirada dos utilitários dos três PRs; a etapa adicional de CI também foi
+  retirada. A evidência da execução pontual permanece, sem nova cobertura contínua.
 - **Dados incompletos de processo:** faltam cronometragem líquida e série diária
   completa de WIP. O agente identificou estimativas e não as chamou de trabalho
   produtivo medido. Comentários e eventos de coluna são marcos, não cronômetros.
@@ -74,16 +76,15 @@ exclusiva de cada linha ou esforço humano substituído.
   desabilita chamadas externas e usa dados fictícios; os dados não foram enviados
   ao WhatsApp. A leitura real depende de chave configurada fora do repositório.
 
-## Reprodução e manutenção
+## Fontes e manutenção
 
 O [snapshot de base](evidencias/sprint-02/retrospectiva-base.json) preserva o
 conteúdo e SHA-256 dos arquivos locais anteriores, os resultados DORA/fluxo,
 o ensaio do MVP e as decisões de escopo. A minuta antiga não foi promovida
 silenciosamente a retrospectiva humana aprovada.
 
-```powershell
-node scripts/conferir-retrospectiva.cjs
-```
+Os valores foram conferidos localmente. O utilitário de conferência foi retirado
+do PR a pedido do usuário; a entrega preserva os documentos e as fontes em JSON.
 
 Atualizar este registro se a validação dos PRs exigir mudanças ou surgirem
 novas contribuições antes do fechamento da sprint. A coleta é um retrato até

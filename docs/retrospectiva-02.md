@@ -51,15 +51,17 @@ Fontes: [métricas DORA adaptadas](metricas-02.md),
 [fluxo do PR #39](https://github.com/MatheusSCristo/EntregaAi/blob/7e6d13d/docs/fluxo-de-valor.md)
 e snapshot da base. A janela DORA termina em **23/11 às 09:10**, antes do merge
 da #22 e dos PRs #39/#40. Não foi estendida apenas para incluir a própria medição.
-O cálculo de conferência reconstrói os valores da Sprint 1 das fontes preservadas.
+A conferência local reconstruiu os valores da Sprint 1 das fontes preservadas.
+O utilitário usado nessa conferência foi retirado do PR a pedido do usuário.
 
 ## Fatos, causas possíveis e aprendizado
 
 - **Fato:** o defeito Sharp passou por lint, testes e build e apareceu ao executar
   a API compilada. **Causa sustentada:** incompatibilidade CommonJS/importação;
   a cobertura original não exercitava esse caminho compilado. **Resposta:** #24
-  adicionou ensaio de PNG real no serviço compilado, PostgreSQL e fluxo completo
-  no CI. Isso reduz uma lacuna conhecida; não garante ausência de outros defeitos.
+  executou um ensaio local de PNG real no serviço compilado, PostgreSQL e fluxo
+  completo. O utilitário e a etapa adicional de CI foram retirados do PR a pedido
+  do usuário; o resultado pontual permanece documentado, sem cobertura contínua adicional.
 - **Fato:** três itens somam **74 h 37 min 27 s** entre entrega e merge, 99,0586%
   do recorte, com a #21 atravessando fim de semana. **Hipótese:** ausência de uma
   janela combinada de validação contribui para a permanência. Não há logs que
@@ -86,16 +88,15 @@ Não são resultados já atingidos nem compromissos aceitos em uma reunião.
 
 O teste externo permanece uma lacuna conhecida e foi dispensado neste escopo.
 
-## Reprodução e condição de fechamento
+## Conferência das fontes e condição de fechamento
 
-```powershell
-node --check scripts/conferir-retrospectiva.cjs
-node scripts/conferir-retrospectiva.cjs
-```
-
-O script confere os hashes das fontes, recalcula a média de lead/cycle e
-throughput da Sprint 1 e valida as referências numéricas DORA/fluxo/MVP.
-Não permite comparar as definições como se fossem a mesma métrica.
+O snapshot preserva conteúdo e hashes das fontes. Para conferir a Sprint 1,
+calcular a média de fechamento menos criação das cinco issues #2–#6; para cycle
+time, usar somente os dois cartões com ambas as transições registradas.
+Throughput conta fechamentos por semana. As fórmulas e populações DORA/fluxo
+continuam identificadas separadamente, sem comparar definições diferentes.
+A conferência foi realizada localmente; esta entrega contém documentos e dados,
+sem o utilitário de cálculo.
 
 Para concluir a #25: validar este texto, integrar as dependências #23/#24 e
 liberar capacidade de revisão. A entrega fica em rascunho enquanto essas
