@@ -29,7 +29,7 @@ exclusiva de cada linha ou esforço humano substituído.
 | 18/11, #19/#20 | Leitura estruturada de foto, auditoria, sugestões editáveis, tratamento de falhas e correção Sharp/CommonJS | [PR #35](https://github.com/MatheusSCristo/EntregaAi/pull/35), [#36](https://github.com/MatheusSCristo/EntregaAi/pull/36); ensaios com provedor controlado, com limitação explícita de avaliação ao vivo |
 | 20–23/11, #21 | Fila PostgreSQL, retentativas e adaptador WhatsApp fake, com concorrência/recuperação | [PR #37](https://github.com/MatheusSCristo/EntregaAi/pull/37), [registro](verificacao-s2-09.md); o usuário pediu fake, sem envio real |
 | 23/11, #22 | Coleta normalizada, cálculo offline e relatório de métricas com proxy de implantação | [PR #38](https://github.com/MatheusSCristo/EntregaAi/pull/38), [métricas](metricas-02.md); relato Sharp e diffs sustentam inferência revisável, não telemetria de produção |
-| 25/11, #23 | Mapa de três itens, estimativas identificadas, cálculo de eficiência e proposta de melhoria | [PR #39](https://github.com/MatheusSCristo/EntregaAi/pull/39), [snapshot do fluxo](evidencias/sprint-02/retrospectiva-base.json); aprovação humana/merge pendentes na preparação |
+| 25/11, #23 | Mapa de três itens, estimativas identificadas, cálculo de eficiência e proposta de melhoria | [PR #39](https://github.com/MatheusSCristo/EntregaAi/pull/39), [snapshot do fluxo](evidencias/sprint-02/fluxo-coleta.json); integrado pelo agente após autorização expressa do usuário |
 | 25/11, #24 | Ensaio local do serviço compilado, PostgreSQL, Compose novo, reinício e revisão de README/licença | [PR #40](https://github.com/MatheusSCristo/EntregaAi/pull/40); utilitário e passo adicional de CI retirados a pedido do usuário; não houve pessoa externa |
 | 25/11, #25 | Consolidação deste registro, preservação da minuta anterior, comparação das métricas e retrospectiva com três propostas | [Retrospectiva 02](retrospectiva-02.md) e cálculo reproduzível; conteúdo preparado pelo agente, sujeito à validação humana |
 
@@ -69,9 +69,12 @@ exclusiva de cada linha ou esforço humano substituído.
   execução manual do roteiro pelo usuário**. Não há ata de reunião de
   retrospectiva humana, sessão de pair programming ou evidência de TDD que
   permita afirmar essas práticas.
-- O agente não fez merge nem habilitou auto-merge. PRs ficam para validação do
-  usuário, respeitando WIP Em progresso=1 e Em revisão=2. Entregas prontas podem
-  aguardar capacidade sem serem apresentadas como integradas.
+- Inicialmente, os PRs ficaram aguardando validação e merge pelo usuário.
+  Em 25/11/2026, o usuário autorizou expressamente o agente a integrar os PRs
+  #39, #40 e #41. Essa autorização é específica para os três PRs. Os checks e
+  as proteções da main foram respeitados, sem auto-merge ou bypass; a branch
+  do #40 foi atualizada com a main e testada novamente antes da integração.
+  O fluxo mantém WIP Em progresso=1 e Em revisão=2.
 - Não foram adicionados segredos aos arquivos desta entrega. O ensaio da #24
   desabilita chamadas externas e usa dados fictícios; os dados não foram enviados
   ao WhatsApp. A leitura real depende de chave configurada fora do repositório.

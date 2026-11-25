@@ -2,7 +2,7 @@
 
 Refs [#25](https://github.com/MatheusSCristo/EntregaAi/issues/25).
 Preparação documental em **25/11/2026**, responsável: **Matheus Senas de Cristo**,
-com assistência do Codex. Estado: **para validação humana**. Não houve reunião
+com assistência do Codex. Estado: **integração autorizada pelo responsável em 25/11/2026**. Não houve reunião
 de retrospectiva humana registrada; este documento reúne fatos, hipóteses e
 propostas para o responsável validar. O recorte não antecipa a entrega final
 da sprint em 30/11 nem a gravação da #26.
@@ -12,10 +12,11 @@ da sprint em 30/11 nem a gravação da #26.
 A base manual evoluiu para recebimento com sugestão de etiqueta, confirmação,
 fila de WhatsApp fake, retirada validada e persistência. Até o início desta
 preparação, #13–#22 estavam integradas à main. O mapa #23 e a validação #24
-estão nos [PRs #39](https://github.com/MatheusSCristo/EntregaAi/pull/39) e
-[#40](https://github.com/MatheusSCristo/EntregaAi/pull/40), com CI aprovado e
-validação/merge ainda pendentes. Seus resultados são fontes de rascunho,
-identificadas pelos commits preservados no snapshot; não são declarados main.
+foram integrados pelos [PRs #39](https://github.com/MatheusSCristo/EntregaAi/pull/39)
+e [#40](https://github.com/MatheusSCristo/EntregaAi/pull/40) em 25/11/2026, após
+autorização expressa do usuário para o agente realizar os merges e aprovação
+dos checks exigidos. O snapshot preserva as versões utilizadas na preparação
+dos cálculos; a integração posterior não altera as janelas de medição congeladas.
 
 O usuário escolheu **WhatsApp fake** e dispensou **teste com pessoa externa**.
 Essas decisões reduziram dependências de credenciais e participação externa,
@@ -48,7 +49,7 @@ evidência de uma reunião que tenha confirmado compromissos nessas datas.
 | Eficiência do fluxo | Indisponível por falta de separação de trabalho/espera | **11,4652%** de média das três estimativas; **0,9414%** agregada | Só estimativas de janela de sessão. Não equivalem a eficiência real de trabalho, que continua indisponível. |
 
 Fontes: [métricas DORA adaptadas](metricas-02.md),
-[fluxo do PR #39](https://github.com/MatheusSCristo/EntregaAi/blob/7e6d13d/docs/fluxo-de-valor.md)
+[fluxo de valor](fluxo-de-valor.md)
 e snapshot da base. A janela DORA termina em **23/11 às 09:10**, antes do merge
 da #22 e dos PRs #39/#40. Não foi estendida apenas para incluir a própria medição.
 A conferência local reconstruiu os valores da Sprint 1 das fontes preservadas.
@@ -98,8 +99,9 @@ continuam identificadas separadamente, sem comparar definições diferentes.
 A conferência foi realizada localmente; esta entrega contém documentos e dados,
 sem o utilitário de cálculo.
 
-Para concluir a #25: validar este texto, integrar as dependências #23/#24 e
-liberar capacidade de revisão. A entrega fica em rascunho enquanto essas
-condições estiverem pendentes; não altera limites do quadro nem presume merge.
+As dependências #23/#24 foram integradas e a capacidade de revisão foi liberada.
+O usuário autorizou a integração do PR desta retrospectiva; os checks e o merge
+correspondentes ficam registrados no GitHub. Essa autorização não é apresentada
+como ata de reunião ou comprovação de teste funcional humano.
 Se a validação mudar as fontes ou surgir nova evidência até o fechamento,
 atualizar o retrato com nova data, preservando o histórico.
