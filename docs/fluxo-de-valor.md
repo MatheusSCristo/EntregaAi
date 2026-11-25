@@ -2,7 +2,7 @@
 
 Refs [#23](https://github.com/MatheusSCristo/EntregaAi/issues/23).
 Coleta em 25/11/2026; horários em São Paulo (UTC−03:00), durações corridas.
-Fonte reproduzível: [snapshot](evidencias/sprint-02/fluxo-coleta.json), com comentários,
+Fonte preservada: [snapshot](evidencias/sprint-02/fluxo-coleta.json), com comentários,
 eventos de revisão, merges e checks. Dependência: [registro de tempos #16](tempos-kanban-sprint-2.md).
 
 ## Fluxo observado
@@ -115,20 +115,19 @@ continuam obrigatórios; não usar merge automático para atingir a meta.
 - Registro complementar: início/fim de trabalho e de cada pausa por item,
   para substituir a estimativa de processamento por medição líquida no futuro.
 
-## Reprodução e limites de comparação
+## Conferência e limites de comparação
 
-Na raiz, sem rede nem dependências adicionais:
+O utilitário usado para conferir os resultados localmente foi retirado do PR
+a pedido do usuário. As fórmulas, horários e fontes continuam neste documento
+e no snapshot, permitindo conferir os valores sem depender de arquivo executável.
 
-```powershell
-node --check scripts/fluxo-de-valor.cjs
-node scripts/fluxo-de-valor.cjs
-node scripts/fluxo-de-valor.cjs docs/evidencias/sprint-02/fluxo-coleta.json
-```
-
-As duas execuções produzem o mesmo JSON. O script valida a ordem dos marcos,
-os checks aprovados, as somas e as sobreposições do CI. O snapshot preserva
-fontes originais; os inícios aproximados foram transcritos dos relatos, não
-deduzidos de commits ou da movimentação atual das colunas.
+Para cada item, subtrair início informado de marco de entrega para estimar
+processamento; subtrair marco de entrega de merge para a janela de validação.
+A soma é o lead time. Dividir processamento por lead time e multiplicar por 100
+para a eficiência estimada. Nas médias, dividir cada soma por três; no CI,
+unir intervalos simultâneos antes de somar, sem adicioná-los novamente ao lead time.
+Os inícios aproximados foram transcritos dos relatos, não deduzidos de commits
+ou da movimentação atual das colunas.
 
 Esta definição difere do lead time de commit→CI da integração de
 [métricas DORA adaptadas](metricas-02.md) e de criação→fechamento de issue da
