@@ -9,8 +9,8 @@ A retirada é validada pelos 4 últimos dígitos do telefone ou por justificativ
 
 **Status: Sprint 2 — MVP local.** API, web, banco, seed, leitura assistida de etiqueta,
 WhatsApp fake e retirada estão implementados. O cadastro manual funciona sem credenciais;
-a leitura real de fotos exige chave OpenAI. O ensaio automatizado pode usar leitura controlada,
-sem chamar serviços externos. Não houve teste com pessoa externa, por decisão do responsável.
+a leitura real de fotos exige chave OpenAI. Na validação local registrada, foi usada
+leitura controlada. Não houve teste com pessoa externa, por decisão do responsável.
 
 ---
 
@@ -113,27 +113,24 @@ Dependências e credenciais:
 | Cadastro manual, pendentes e retirada | Docker, API, web e PostgreSQL | Nenhuma chave externa |
 | WhatsApp fake | Consumidor da API + PostgreSQL | Nenhuma; não há envio real |
 | Leitura real de foto | OpenAI Responses API + internet | `OPENAI_API_KEY`, somente no ambiente da API |
-| Ensaio compilado abaixo | PostgreSQL e imagem da API com dependências de teste | Nenhuma; leitor controlado injetado somente no ensaio |
 
 A licença do projeto é [MIT](LICENSE). Instalação inicial de imagens e pacotes
-requer internet; o ensaio automatizado não chama OpenAI nem WhatsApp.
+requer internet; o WhatsApp simulado não chama um provedor externo.
 
-### Ensaio reproduzível do MVP compilado (S2-12)
+### Roteiro local do MVP (S2-12)
 
-Em um ambiente de teste, após a subida do Compose:
+1. Suba o Compose e abra a portaria.
+2. Selecione um destinatário, informe o local e registre a encomenda. Para usar
+   foto real, configure a chave conforme a seção de leitura de etiqueta; se a
+   leitura falhar, selecione o destinatário manualmente.
+3. Aguarde alguns segundos e clique **Atualizar status** para conferir o WhatsApp fake.
+4. Recarregue a página e confirme a persistência da encomenda.
+5. Registre a retirada com o final do telefone fictício do seed, ou use retirada
+   manual com justificativa. Confira que a encomenda saiu dos pendentes.
 
-```bash
-docker compose exec -T api node apps/api/scripts/verificar-mvp.cjs
-```
-
-O comando usa os módulos compilados e um PostgreSQL real, cria dados fictícios
-próprios e remove somente esses dados ao terminar. Confere foto PNG/Sharp,
-auditoria, confirmação, WhatsApp fake, reinício da aplicação de teste, retirada,
-código incorreto, duplicação de retirada, leitura parcial e falha de leitura.
-O leitor de foto substituto existe apenas no processo de teste; a API normal
-continua exigindo chave para leitura real. O resultado é JSON com horários e duração.
-Esse ensaio roda no CI após o build. Não mede usabilidade humana nem equivale a
-uma validação visual de câmera/celular ou teste por pessoa externa.
+Os resultados da validação técnica pontual estão em
+[validação do MVP](docs/validacao-mvp.md). Os utilitários usados no ensaio não
+integram esta entrega; não há nova etapa de CI dependente deles.
 
 Escolha um morador, registre uma encomenda com local de armazenamento e recarregue
 a página. Para verificar persistência, execute `docker compose down`, depois

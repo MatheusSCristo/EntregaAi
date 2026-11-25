@@ -2,7 +2,9 @@
 
 Refs [#24](https://github.com/MatheusSCristo/EntregaAi/issues/24).
 Execução em 25/11/2026, São Paulo. Responsável pela execução: agente Codex,
-sob solicitação de Matheus Senas de Cristo.
+sob solicitação de Matheus Senas de Cristo. Os utilitários usados na verificação
+local e a etapa adicional de CI foram retirados do PR a pedido do usuário;
+este documento preserva a execução e os resultados como evidência histórica.
 
 ## Escopo aprovado
 
@@ -35,7 +37,6 @@ Comandos principais, na raiz da branch:
 
 ```bash
 docker compose -p entregaai-s224 up --build -d --wait
-docker compose -p entregaai-s224 exec -T api node apps/api/scripts/verificar-mvp.cjs
 docker compose -p entregaai-s224 down
 docker compose -p entregaai-s224 up -d --wait
 ```
@@ -46,10 +47,10 @@ conferiu a encomenda e os mesmos quatro moradores. Não foi usado `down -v`.
 O projeto de teste pode ser parado com `docker compose -p entregaai-s224 down`,
 preservando os volumes. Não parar projetos alheios para repetir o ensaio.
 
-Para testar sem Compose: instalar dependências, gerar Prisma, migrar uma base
-de teste, executar `npm run build` e `npm run test:mvp --workspace api` com
-`DATABASE_URL` configurada. O script limpa somente os dados do condomínio
-aleatório criado pela própria execução, preservando os dados preexistentes.
+O ensaio controlado foi executado pontualmente com um utilitário local depois
+retirado da entrega. Seus dados fictícios foram limpos pelo condomínio aleatório
+da execução. Para conferir o produto, seguir o roteiro manual do README; a
+leitura de fotos reais continua exigindo chave configurada fora do repositório.
 
 ## Resultados e evidências
 
@@ -73,8 +74,9 @@ recriação com volumes preservados **25,984 s**. Os 45 testes de regras e a an�
 da API passaram; a checagem de tipos no contêiner foi feita com
 `tsc --noEmit --incremental false`, evitando gravar cache no `dist` da imagem
 de runtime, que pertence à etapa de build. Jest foi executado separadamente.
-O ensaio compilado passa a executar no CI após o build com PostgreSQL real,
-cobrindo a lacuna observada no defeito Sharp da #22.
+O ensaio compilado cobriu pontualmente a lacuna observada no defeito Sharp da
+#22. A etapa adicional de CI foi retirada junto com o utilitário; a versão final
+mantém as verificações padrão do projeto, sem nova cobertura contínua desse ensaio.
 
 ## Problemas encontrados e correções
 
@@ -83,12 +85,13 @@ cobrindo a lacuna observada no defeito Sharp da #22.
 - Referências a `docs/proposta.md` inexistente: corrigidas para
   `sprints/0/proposta.md`; quadro e vídeos versionados agora têm links reais.
 - O comando inicial do ensaio assumia diretório da API, mas o contêiner tem
-  `WORKDIR /app`: corrigido para `node apps/api/scripts/verificar-mvp.cjs` e
-  reexecutado com sucesso. Não foi uma falha de inicialização da aplicação.
+  `WORKDIR /app`: o caminho foi corrigido e o ensaio reexecutado com sucesso.
+  O utilitário foi posteriormente retirado do PR, conforme solicitado.
 - A instalação emitiu avisos preexistentes de lockfile/dependências; terminou
   com sucesso. Esta tarefa não altera versões ou lockfile para resolver esses avisos.
-- O fluxo compilado completo não tinha verificação contínua: script e etapa de
-  CI adicionados. Os testes existentes de regras continuam em execução.
+- O fluxo compilado completo não tinha verificação contínua. Foi feito um ensaio
+  pontual; o utilitário e a etapa adicional de CI foram retirados por solicitação
+  do usuário. Os testes existentes de regras continuam em execução.
 
 ## Licença, credenciais e limites
 
