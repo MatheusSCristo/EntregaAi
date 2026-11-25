@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "collected_at": "2026-11-25T12:15:10.517Z",
+  "timezone": "America/Sao_Paulo",
+  "scope_change": {
+    "date": "2026-11-25",
+    "requested_by": "usuário no chat",
+    "external_tester": false,
+    "source": "https://github.com/MatheusSCristo/EntregaAi/issues/24#issuecomment-7161805763"
+  },
+  "compose": {
+    "inicio": "2026-11-25T12:09:06.1836574Z",
+    "fim": "2026-11-25T12:11:31.2638735Z",
+    "duracao_segundos": 145.0802161,
+    "projeto": "entregaai-s224",
+    "volumes_iniciais": 0
+  },
+  "compiled_flow": {
+    "resultado": "aprovado",
+    "inicio": "2026-11-25T12:11:51.270Z",
+    "fim": "2026-11-25T12:11:52.591Z",
+    "duracao_segundos": 1.321,
+    "ambiente": {
+      "node": "v22.23.4",
+      "banco": "PostgreSQL real",
+      "artefato": "NestJS compilado + Sharp real",
+      "leitura": "substituto injetado apenas no ensaio",
+      "whatsapp": "fake"
+    },
+    "teste_externo": false,
+    "chamadas_externas": false,
+    "etapas": [
+      "foto PNG real processada pelo Sharp compilado, auditada e relacionada ao cadastro; confirmação exigida",
+      "cadastro confirmado e WhatsApp fake concluído pelo consumidor periódico em uma tentativa",
+      "encomenda e estado da notificação persistem após reiniciar a aplicação de teste",
+      "código incorreto preserva pendência; código correto registra método/horário; repetição bloqueada e item removido dos pendentes",
+      "leitura parcial e falha de provedor permitem cadastro manual; retirada manual exige justificativa"
+    ]
+  },
+  "persistence": {
+    "resultado": "aprovado",
+    "web_http": 200,
+    "proxy_api": "aprovado",
+    "seed_antes": 4,
+    "seed_depois": 4,
+    "ids_preservados": true,
+    "encomenda_id": "cbf9f6fb-a5f7-4dbf-a732-4b1df0843282",
+    "encomenda_persistida": true,
+    "notificacao_status": "simulada",
+    "reinicio_inicio": "2026-11-25T12:13:12.2977543Z",
+    "reinicio_fim": "2026-11-25T12:13:38.2814061Z",
+    "reinicio_duracao_segundos": 25.9836518,
+    "volumes_removidos": false
+  },
+  "services": [
+    {
+      "service": "api",
+      "state": "running",
+      "health": "healthy",
+      "image": "entregaai-s224-api"
+    },
+    {
+      "service": "postgres",
+      "state": "running",
+      "health": "healthy",
+      "image": "postgres:16-alpine"
+    },
+    {
+      "service": "redis",
+      "state": "running",
+      "health": "healthy",
+      "image": "redis:7.4-alpine"
+    },
+    {
+      "service": "web",
+      "state": "running",
+      "health": "healthy",
+      "image": "entregaai-s224-web"
+    }
+  ],
+  "limitations": [
+    "sem pessoa externa ou medida de usabilidade humana",
+    "leitor de foto controlado somente no ensaio",
+    "sem avaliação ao vivo do modelo OpenAI",
+    "sem validação visual de câmera/celular",
+    "WhatsApp exclusivamente fake",
+    "build com imagens-base em cache; base PostgreSQL inicialmente vazia"
+  ],
+  "resolved_test_setup": [
+    {
+      "problem": "comando de ensaio usava /app/scripts, mas código está em /app/apps/api/scripts",
+      "correction": "docker compose exec -T api node apps/api/scripts/verificar-mvp.cjs",
+      "result": "aprovado"
+    },
+    {
+      "problem": "npm test dentro da imagem de runtime não pode gravar dist/tsconfig.tsbuildinfo do build",
+      "correction": "checagem tsc --noEmit --incremental false e Jest executados separadamente; código da aplicação inalterado"
+    }
+  ]
+}
