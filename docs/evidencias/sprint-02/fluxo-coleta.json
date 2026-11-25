@@ -1,0 +1,179 @@
+{
+  "schema_version": 1,
+  "collected_at": "2026-11-25T12:02:30.321Z",
+  "timezone": "America/Sao_Paulo",
+  "source": "GitHub CLI: issue view, pr view e GraphQL ReadyForReviewEvent; fontes originais preservadas.",
+  "selection": "Amostra intencional #13, #14, #21: duas entregas curtas e uma que atravessou fim de semana; não representa média da sprint inteira.",
+  "items": [
+    {
+      "issue": 13,
+      "pr": 28,
+      "started_at": "2026-11-04T17:32:00Z",
+      "start_source": "https://github.com/MatheusSCristo/EntregaAi/issues/13#issuecomment-6637481448",
+      "delivery_comment": null,
+      "issue_url": "https://github.com/MatheusSCristo/EntregaAi/issues/13",
+      "pr_url": "https://github.com/MatheusSCristo/EntregaAi/pull/28",
+      "ready_at": "2026-11-04T17:52:06Z",
+      "session_end_at": "2026-11-04T17:52:06Z",
+      "session_end_source": "https://github.com/MatheusSCristo/EntregaAi/pull/28",
+      "session_end_method": "Evento ReadyForReview como marco aproximado do fim da sessão; não há comentário posterior de fim.",
+      "merged_at": "2026-11-04T22:55:47Z",
+      "merge_sha": "d4f5074f57de77c3346d6a0a5d171762e1fed6a0",
+      "processing_quality": "estimativa da janela de sessão; inclui CI paralelo e administração; esforço líquido indisponível",
+      "start_precision": "aproximado ao minuto, informado no registro original",
+      "comments": [
+        {
+          "url": "https://github.com/MatheusSCristo/EntregaAi/issues/13#issuecomment-6637481448",
+          "created_at": "2026-11-04T17:32:18Z",
+          "body": "Início efetivo: 04/11/2026 14:32 (São Paulo). Branch codex/13-compose, isolada da cópia local existente. Plano: imagens API/web, Compose com migrations/seed não destrutivo e health checks, validação em base limpa e persistência. Dependências: Docker Desktop instalado, mas engine ainda indisponível; vou tentar iniciá-lo durante a implementação.\r\n"
+        },
+        {
+          "url": "https://github.com/MatheusSCristo/EntregaAi/issues/13#issuecomment-6637537144",
+          "created_at": "2026-11-04T17:34:59Z",
+          "body": "Implementação em andamento: Dockerfiles API/web, proxy /api, health checks, dependências saudáveis, migration inicial e seed não destrutivo. Docker Desktop iniciado com sucesso. Construção Linux em andamento; npm apontou avisos de lockfile, que está sendo normalizado. Também foram incorporadas nesta branch isolada as correções locais mínimas de validação do DTO e compilação, necessárias para o cadastro funcionar com ValidationPipe e a API iniciar. Próximo marco: subida em volumes novos, cadastro, reinício e persistência. Sem conclusão de testes ainda.\r\n"
+        },
+        {
+          "url": "https://github.com/MatheusSCristo/EntregaAi/issues/13#issuecomment-6637663972",
+          "created_at": "2026-11-04T17:41:32Z",
+          "body": "Validação de integração concluída: quatro serviços saudáveis, web HTTP 200, proxy /api, cadastro persistido após down/up e quatro moradores sem duplicação do seed. Lint da API passou; duas suítes e oito testes passaram. Evidências em docs/verificacao-s2-01.md na branch codex/13-compose. Checagem da web e publicação do PR em andamento; cartão permanece In progress até validações concluírem.\r\n"
+        },
+        {
+          "url": "https://github.com/MatheusSCristo/EntregaAi/issues/13#issuecomment-6637780457",
+          "created_at": "2026-11-04T17:47:08Z",
+          "body": "Implementação concluída no PR #27: https://github.com/MatheusSCristo/EntregaAi/pull/27\n\nBuild das imagens, lint API/web, oito testes e integração HTTP com persistência após recriação passaram. Critérios técnicos estão comprovados em docs/verificacao-s2-01.md.\n\nBloqueio externo em 04/11/2026: o job Build and lint permanece queued, sem runner atribuído e sem etapas iniciadas, desde 14:42 (São Paulo). Não há falha de código reportada. Execução: https://github.com/MatheusSCristo/EntregaAi/actions/runs/41879670602\n\nO PR fica em rascunho e o cartão retorna ao Sprint Backlog para representar a espera, preservando Start date. Condição de desbloqueio: GitHub executar o CI; corrigir eventuais falhas e, com CI verde, tornar PR pronto e mover para In review (em validação). Merge permanece exclusivamente com o usuário.\n\nValidação manual: abrir http://localhost:5173, registrar encomenda, executar docker compose down e docker compose up -d --wait na branch do PR, conferir que o cadastro permanece. Não usar down -v.\r\n"
+        },
+        {
+          "url": "https://github.com/MatheusSCristo/EntregaAi/issues/13#issuecomment-6637828011",
+          "created_at": "2026-11-04T17:49:25Z",
+          "body": "Convenção de branch corrigida conforme orientação: feat/task-<numero-da-issue>. Branch atual: feat/task-13. Skill atualizada e validada. O GitHub fechou automaticamente o PR #27 ao renomear sua branch de origem; ele foi substituído pelo PR #28, com os mesmos commits: https://github.com/MatheusSCristo/EntregaAi/pull/28. Nenhum merge realizado. O novo PR está em rascunho, mantendo a pendência de CI já registrada.\r\n"
+        }
+      ],
+      "checks": [
+        {
+          "name": "Build and lint",
+          "conclusion": "SUCCESS",
+          "started_at": "2026-11-04T17:42:14Z",
+          "completed_at": "2026-11-04T17:43:07Z",
+          "url": "https://github.com/MatheusSCristo/EntregaAi/actions/runs/41879670602/job/126748592566"
+        },
+        {
+          "name": "Build and lint",
+          "conclusion": "SUCCESS",
+          "started_at": "2026-11-04T17:50:50Z",
+          "completed_at": "2026-11-04T17:51:53Z",
+          "url": "https://github.com/MatheusSCristo/EntregaAi/actions/runs/41881015601/job/126753184289"
+        }
+      ]
+    },
+    {
+      "issue": 14,
+      "pr": 29,
+      "started_at": "2026-11-06T12:53:00Z",
+      "start_source": "../../verificacao-s2-02.md",
+      "delivery_comment": "https://github.com/MatheusSCristo/EntregaAi/issues/14#issuecomment-6685370235",
+      "issue_url": "https://github.com/MatheusSCristo/EntregaAi/issues/14",
+      "pr_url": "https://github.com/MatheusSCristo/EntregaAi/pull/29",
+      "ready_at": "2026-11-06T12:58:58Z",
+      "session_end_at": "2026-11-06T12:59:03Z",
+      "session_end_source": "https://github.com/MatheusSCristo/EntregaAi/issues/14#issuecomment-6685370235",
+      "session_end_method": "Horário do comentário de entrega, depois do evento de revisão.",
+      "merged_at": "2026-11-06T13:14:46Z",
+      "merge_sha": "6b1a962d5414f8c213cea13eceaf4ce0a7ce3617",
+      "processing_quality": "estimativa da janela de sessão; inclui CI paralelo e administração; esforço líquido indisponível",
+      "start_precision": "aproximado ao minuto, informado no registro original",
+      "comments": [
+        {
+          "url": "https://github.com/MatheusSCristo/EntregaAi/issues/14#issuecomment-6685295485",
+          "created_at": "2026-11-06T12:54:52Z",
+          "body": "Início em 06/11/2026 (São Paulo). WIP conferido: nenhum item em progresso ou revisão. Escopo: CI reproduzível em todo push/PR, instalação limpa Linux e evidência verde. Trabalho em branch isolada feat/task-14 preservando alterações locais. Plano: inspecionar versões e lockfile, padronizar instalação/runtime, executar CI e entregar PR em validação. Sem dependências impeditivas."
+        },
+        {
+          "url": "https://github.com/MatheusSCristo/EntregaAi/issues/14#issuecomment-6685318713",
+          "created_at": "2026-11-06T12:56:09Z",
+          "body": "Implementação publicada em ac74bf9: todo push/PR, Ubuntu 24.04, Node 22.16.0, npm 10.9.2 e npm ci. README com reprodução limpa. Validação Linux em andamento: https://github.com/MatheusSCristo/EntregaAi/actions/runs/42221394026. Próximo passo: conferir resultado, registrar evidência e entregar em revisão. Sem bloqueio conhecido."
+        },
+        {
+          "url": "https://github.com/MatheusSCristo/EntregaAi/issues/14#issuecomment-6685341919",
+          "created_at": "2026-11-06T12:57:27Z",
+          "body": "Validação Linux inicial concluída com sucesso: npm ci, geração Prisma, lint, testes e build passaram em https://github.com/MatheusSCristo/EntregaAi/actions/runs/42221394026 (push) e https://github.com/MatheusSCristo/EntregaAi/actions/runs/42221469049 (PR). Processamento de implementação encerrado; espera de CI iniciada às 09:55:38 de 06/11/2026 (São Paulo). Commit final e80e608 documenta reprodução, ação da retrospectiva 01 e fontes de tempo; checks desse commit em andamento. Próximo passo: confirmar verdes finais e mover para validação."
+        },
+        {
+          "url": "https://github.com/MatheusSCristo/EntregaAi/issues/14#issuecomment-6685370235",
+          "created_at": "2026-11-06T12:59:03Z",
+          "body": "Entrega em validação em 06/11/2026 (São Paulo). PR: https://github.com/MatheusSCristo/EntregaAi/pull/29. Commit final e80e608 com CI reproduzível em todo push/PR e documentação da ação da retrospectiva. Checks finais verdes: push https://github.com/MatheusSCristo/EntregaAi/actions/runs/42221566212 e PR https://github.com/MatheusSCristo/EntregaAi/actions/runs/42221576088. Instalação limpa Linux, geração Prisma, lint, testes e build passaram. Sem apontamentos de revisão disponíveis. Espera de CI encerrada; inicia espera por validação humana. Roteiro: conferir versões no passo Report runtime, logs de npm ci e os passos de lint/test/build; ler docs/verificacao-s2-02.md e README. Cartão movido para In review. Aguardando validação e merge pelo usuário."
+        }
+      ],
+      "checks": [
+        {
+          "name": "Build, test and lint",
+          "conclusion": "SUCCESS",
+          "started_at": "2026-11-06T12:57:05Z",
+          "completed_at": "2026-11-06T12:58:26Z",
+          "url": "https://github.com/MatheusSCristo/EntregaAi/actions/runs/42221576088/job/127904658378"
+        },
+        {
+          "name": "Build, test and lint",
+          "conclusion": "SUCCESS",
+          "started_at": "2026-11-06T12:57:00Z",
+          "completed_at": "2026-11-06T12:57:58Z",
+          "url": "https://github.com/MatheusSCristo/EntregaAi/actions/runs/42221566212/job/127904625685"
+        }
+      ]
+    },
+    {
+      "issue": 21,
+      "pr": 37,
+      "started_at": "2026-11-20T14:31:00Z",
+      "start_source": "https://github.com/MatheusSCristo/EntregaAi/issues/21#issuecomment-7042121208",
+      "delivery_comment": "https://github.com/MatheusSCristo/EntregaAi/issues/21#issuecomment-7042482134",
+      "issue_url": "https://github.com/MatheusSCristo/EntregaAi/issues/21",
+      "pr_url": "https://github.com/MatheusSCristo/EntregaAi/pull/37",
+      "ready_at": "2026-11-20T14:46:55Z",
+      "session_end_at": "2026-11-20T14:47:24Z",
+      "session_end_source": "https://github.com/MatheusSCristo/EntregaAi/issues/21#issuecomment-7042482134",
+      "session_end_method": "Horário do comentário de entrega, depois do evento de revisão.",
+      "merged_at": "2026-11-23T12:05:27Z",
+      "merge_sha": "478ccaf7a6b7cd0587973c5cef9873535141e2bc",
+      "processing_quality": "estimativa da janela de sessão; inclui CI paralelo e administração; esforço líquido indisponível",
+      "start_precision": "aproximado ao minuto, informado no registro original",
+      "comments": [
+        {
+          "url": "https://github.com/MatheusSCristo/EntregaAi/issues/21#issuecomment-7042121208",
+          "created_at": "2026-11-20T14:31:14Z",
+          "body": "20/11/2026 11:31 (São Paulo). Início da S2-09 em feat/task-21, isolada em .task-21 a partir da main 50a3d81. Dependência #13 concluída. Escopo: fila persistente vinculada ao cadastro confirmado, adaptador WhatsApp, retentativas limitadas, estado de envio e proteção contra duplicação; testes com provedor substituto e documentação. Provedor/credenciais e recebimento real dependem de configuração do usuário; consulta enviada no chat, sem solicitar segredos. Nenhum envio real será realizado sem destinatário de teste autorizado.\n\nAmostra do quadro antes de iniciar: Em progresso 0/1, Em revisão 1/2 (#20, já integrada), Sprint Backlog 1/5 (#21). Após sincronizar #20 e iniciar #21: Em progresso 1/1, Em revisão 0/2, Sprint Backlog 0/5. Preservadas alterações antigas no checkout principal.\r\n"
+        },
+        {
+          "url": "https://github.com/MatheusSCristo/EntregaAi/issues/21#issuecomment-7042266601",
+          "created_at": "2026-11-20T14:37:42Z",
+          "body": "20/11/2026 11:37 (São Paulo). Escopo ajustado por pedido explícito do usuário no chat: usar apenas um fake para teste. A integração passa a usar simulador local, sem credenciais e sem envio de mensagens. O critério de mensagem real recebida será substituído por evidência de simulação identificada, mantendo fila persistente, retentativa limitada, estado de falha e prevenção de duplicações. A dependência de provedor/credenciais deixa de bloquear esta tarefa de teste; integração real fica fora deste escopo.\r\n"
+        },
+        {
+          "url": "https://github.com/MatheusSCristo/EntregaAi/issues/21#issuecomment-7042341688",
+          "created_at": "2026-11-20T14:41:10Z",
+          "body": "20/11/2026 11:41 (São Paulo). Implementação concluída no escopo fake: cadastro + notificação na mesma transação PostgreSQL; consumidor com reserva condicional, fila persistente, até 3 tentativas com backoff de 60/120 s, estados simulada/falha/incerta, proteção contra duplicação e recuperação de reservas. Tela identifica WhatsApp (teste) e permite atualizar status. Sem chamadas externas ou credenciais.\n\nEvidência: npm test (45 testes aprovados), npm run lint e npm run build aprovados. npm run test:whatsapp --workspace api aprovado em PostgreSQL 16 isolado: unicidade, rollback, 12 consumidores concorrentes, pausa, reconexão, retentativa, limite e estados terminais. CI ampliado para executar a integração no PostgreSQL. Próximo passo: validar em navegador e publicar PR para revisão. Nenhum bloqueio atual.\r\n"
+        },
+        {
+          "url": "https://github.com/MatheusSCristo/EntregaAi/issues/21#issuecomment-7042482134",
+          "created_at": "2026-11-20T14:47:24Z",
+          "body": "20/11/2026 11:47 (São Paulo). PR https://github.com/MatheusSCristo/EntregaAi/pull/37 pronto para validação, commit ecafb411fc3bf3a9d912c0512572408dc0941987. Cartão confirmado em In review (Em validação). WIP observado: Em progresso 0/1, Em revisão 1/2 (#21), Sprint Backlog 0/5. Issue permanece aberta para validação e merge.\n\nEscopo entregue: WhatsApp exclusivamente fake, sem envio externo ou credenciais; fila persistente e cadastro atômicos, reserva exclusiva, até três tentativas, estados e atualização na portaria. Critérios da issue ajustados à decisão explícita do usuário e marcados com evidência.\n\nValidação: 45 testes unitários aprovados; lint/build aprovados; integração em PostgreSQL 16 aprovada (rollback, unicidade, 12 consumidores, pausa, reconexão, retentativas e recuperação). API compilada: HTTP 201 com pendente e consumidor periódico persistindo simulada em uma tentativa. A conferência visual ficou pendente porque a ferramenta de navegador não conseguiu determinar a URL com segurança; não houve novas tentativas de controle após esse bloqueio.\n\nCI aprovado: https://github.com/MatheusSCristo/EntregaAi/actions/runs/44756369371 e https://github.com/MatheusSCristo/EntregaAi/actions/runs/44756380537. Janela conjunta medida de CI: 11:44:33–11:46:08 de 20/11, 1 min 35 s, com sobreposição à documentação e preparação da entrega. Não equivale a espera exclusiva. Trabalho desta sessão: início registrado 11:31; fim neste comentário, aproximado ao minuto; duração líquida indisponível. Espera por validação começa neste comentário.\n\nRoteiro humano: subir o Compose, registrar uma encomenda, aguardar cerca de 2 segundos e clicar Atualizar status. Conferir WhatsApp (teste): Simulação concluída e persistência após recarga. Para falhas, usar WHATSAPP_FAKE_MODE=temporaria/permanente/incerta conforme README e docs/verificacao-s2-09.md. Nenhuma mensagem real é enviada.\n\n**Aguardando validação e merge pelo usuário.**\r\n"
+        }
+      ],
+      "checks": [
+        {
+          "name": "Build, test and lint",
+          "conclusion": "SUCCESS",
+          "started_at": "2026-11-20T14:44:41Z",
+          "completed_at": "2026-11-20T14:46:07Z",
+          "url": "https://github.com/MatheusSCristo/EntregaAi/actions/runs/44756380537/job/136357090239"
+        },
+        {
+          "name": "Build, test and lint",
+          "conclusion": "SUCCESS",
+          "started_at": "2026-11-20T14:44:37Z",
+          "completed_at": "2026-11-20T14:46:05Z",
+          "url": "https://github.com/MatheusSCristo/EntregaAi/actions/runs/44756369371/job/136357050583"
+        }
+      ]
+    }
+  ]
+}

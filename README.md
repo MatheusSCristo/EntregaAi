@@ -1,13 +1,16 @@
 # EntregaAí
 
-Sistema de portaria que registra encomendas a partir de **uma foto da etiqueta**: uma IA lê o rótulo,
-identifica a unidade e o morador no cadastro do condomínio e **notifica o destinatário no WhatsApp**
-automaticamente. A retirada é validada pelos 4 últimos dígitos do telefone do morador.
+Sistema de portaria para registrar encomendas, conferir pendentes e validar retiradas.
+A leitura de **foto da etiqueta** sugere unidade e morador para confirmação humana.
+Nesta entrega, o **WhatsApp é simulado**, com fila e retentativas; nenhuma mensagem real é enviada.
+A retirada é validada pelos 4 últimos dígitos do telefone ou por justificativa manual.
 
 > Projeto acadêmico da disciplina **DIM0510 — Processos de Software** · 2026.2 · UFRN
 
-**Status: Sprint 1 (base técnica).** O repositório agora tem a estrutura inicial do monorepo com
-API, front-end, banco local e seed do condomínio para preparar o primeiro incremento funcional.
+**Status: Sprint 2 — MVP local.** API, web, banco, seed, leitura assistida de etiqueta,
+WhatsApp fake e retirada estão implementados. O cadastro manual funciona sem credenciais;
+a leitura real de fotos exige chave OpenAI. Na validação local registrada, foi usada
+leitura controlada. Não houve teste com pessoa externa, por decisão do responsável.
 
 ---
 
@@ -26,7 +29,7 @@ Hoje, na portaria, o processo é manual de ponta a ponta:
 ## A proposta
 
 **Foto → IA → WhatsApp.** O porteiro fotografa a etiqueta; o sistema devolve bloco, unidade e
-destinatário já preenchidos e editáveis; ao confirmar, o morador recebe a mensagem na hora. Na
+destinatário já preenchidos e editáveis; ao confirmar, uma notificação entra na fila de teste. Na
 retirada, a validação pelos 4 últimos dígitos do telefone deixa registro de que a encomenda foi
 entregue à pessoa certa.
 
@@ -39,15 +42,15 @@ entregue à pessoa certa.
 | Recebimento com foto e leitura da etiqueta | **Login, autenticação e autorização** |
 | Identificação da unidade e do morador no cadastro | Telas de cadastro — os dados vêm do seed |
 | Registro com local de armazenamento, observação e auditoria da leitura | Qualquer perfil de usuário além do porteiro |
-| Notificação automática no WhatsApp, com retentativa | Autoatendimento do morador (portal, app, consulta) |
+| WhatsApp simulado, com fila e retentativa | Envio real de WhatsApp; autoatendimento do morador |
 | Retirada validada pelos 4 últimos dígitos do telefone | Cobrança, planos e multi-condomínio |
 | Lista de pendentes da portaria | App nativo · bot de WhatsApp · biometria · rastreio de transportadora · modo offline |
 
-**Condomínio, unidades e moradores vêm pré-cadastrados** por um script de seed versionado. O morador
-existe no sistema apenas como **nome e telefone**: não tem conta, não acessa nada — só recebe a
-mensagem.
+**Condomínio, unidades e moradores vêm pré-cadastrados** por um seed versionado.
+O morador existe no sistema apenas como nome e telefone: não tem conta nem acessa o app.
+Os dados do seed são fictícios; o simulador não envia mensagens a esses números.
 
-Escopo completo, backlog e critérios de aceitação: [`docs/proposta.md`](docs/proposta.md).
+Escopo completo, backlog e critérios de aceitação: [`sprints/0/proposta.md`](sprints/0/proposta.md).
 
 ## Equipe
 
@@ -62,32 +65,35 @@ Projeto individual.
 
 ## Documentos
 
-- **Proposta da Sprint 0:** [`docs/proposta.md`](docs/proposta.md) — visão, MVP, backlog, stack e
+- **Proposta da Sprint 0:** [`sprints/0/proposta.md`](sprints/0/proposta.md) — visão, MVP, backlog, stack e
   acordo de processo
-- **Quadro (GitHub Projects):** ⟨link⟩ — backlog priorizado, com os critérios de aceitação em cada
+- **Quadro (GitHub Projects):** [Kanban](https://github.com/users/MatheusSCristo/projects/9) — backlog priorizado, com os critérios de aceitação em cada
   história
-- **Vídeo da Sprint 0 (5 min):** ⟨link⟩
+- **Vídeo da Sprint 0:** [arquivo versionado](sprints/0/Sprint0.mp4)
+- **Validação local do MVP:** [roteiro, evidências e limites](docs/validacao-mvp.md)
 
-## Stack prevista
+## Stack implementada
 
 | Camada | Escolha |
 |---|---|
-| Monorepo | Turborepo + npm workspaces |
+| Monorepo | npm workspaces |
 | API | NestJS 11 (TypeScript) |
 | Banco | PostgreSQL + Prisma, com `prisma/seed.ts` versionado |
-| Assíncrono | BullMQ sobre Redis |
+| Assíncrono | Fila persistente no PostgreSQL; Redis permanece no Compose, sem BullMQ nesta entrega |
 | Leitura da etiqueta | Modelo multimodal via API, com saída estruturada |
-| WhatsApp | Porta + adaptador (API oficial / provedor self-hosted em desenvolvimento) |
-| Front-end | React 19 + Vite + TypeScript + Tailwind |
+| WhatsApp | Porta + adaptador fake local, sem provedor externo |
+| Front-end | React 19 + Vite + TypeScript + CSS |
 | CI | GitHub Actions — lint, build e testes, com gate em PR |
 
-Justificativa de cada escolha: [`docs/proposta.md`](docs/proposta.md#4-stack-tecnológico-e-justificativa).
+Justificativa de cada escolha: [`sprints/0/proposta.md`](sprints/0/proposta.md#4-stack-tecnológico-e-justificativa).
 
 ## Como rodar
 
 Pré-requisito: Docker Desktop (ou Docker Engine com Compose) em execução.
 Portas livres: 5173 (web), 3000 (API), 5433 (PostgreSQL) e 6379 (Redis).
-Não é necessário instalar Node, npm ou configurar `.env` para a demonstração.
+Não é necessário instalar Node, npm ou configurar `.env` para cadastro manual,
+WhatsApp simulado e retirada. Para interpretar fotos reais, configure a chave
+conforme a seção de leitura de etiqueta; falha na leitura permite preenchimento manual.
 
 ```bash
 git clone https://github.com/MatheusSCristo/EntregaAi.git
@@ -99,6 +105,32 @@ Abra [a portaria](http://localhost:5173). A primeira construção baixa dependê
 as próximas reutilizam as imagens. O Compose inicia banco e Redis, aplica migrations,
 cria dados de demonstração sem apagar os existentes e inicia API e web com health checks.
 A configuração é para demonstração local: portas acessíveis somente pela própria máquina.
+
+Dependências e credenciais:
+
+| Fluxo | Serviços | Credenciais |
+| --- | --- | --- |
+| Cadastro manual, pendentes e retirada | Docker, API, web e PostgreSQL | Nenhuma chave externa |
+| WhatsApp fake | Consumidor da API + PostgreSQL | Nenhuma; não há envio real |
+| Leitura real de foto | OpenAI Responses API + internet | `OPENAI_API_KEY`, somente no ambiente da API |
+
+A licença do projeto é [MIT](LICENSE). Instalação inicial de imagens e pacotes
+requer internet; o WhatsApp simulado não chama um provedor externo.
+
+### Roteiro local do MVP (S2-12)
+
+1. Suba o Compose e abra a portaria.
+2. Selecione um destinatário, informe o local e registre a encomenda. Para usar
+   foto real, configure a chave conforme a seção de leitura de etiqueta; se a
+   leitura falhar, selecione o destinatário manualmente.
+3. Aguarde alguns segundos e clique **Atualizar status** para conferir o WhatsApp fake.
+4. Recarregue a página e confirme a persistência da encomenda.
+5. Registre a retirada com o final do telefone fictício do seed, ou use retirada
+   manual com justificativa. Confira que a encomenda saiu dos pendentes.
+
+Os resultados da validação técnica pontual estão em
+[validação do MVP](docs/validacao-mvp.md). Os utilitários usados no ensaio não
+integram esta entrega; não há nova etapa de CI dependente deles.
 
 Escolha um morador, registre uma encomenda com local de armazenamento e recarregue
 a página. Para verificar persistência, execute `docker compose down`, depois
@@ -242,7 +274,7 @@ Ele também roda no CI. Detalhes: [verificação S2-09](docs/verificacao-s2-09.m
   apontamento é resolvido ou justificado por escrito antes do merge.
 - **Definição de Pronto** em 7 itens, com CI verde como gate obrigatório.
 
-Acordo completo: [`docs/proposta.md`](docs/proposta.md#5-acordo-de-processo).
+Acordo completo: [`sprints/0/proposta.md`](sprints/0/proposta.md#5-acordo-de-processo).
 
 ## Licença
 
@@ -252,7 +284,7 @@ Acordo completo: [`docs/proposta.md`](docs/proposta.md#5-acordo-de-processo).
 
 ### Sprint 0
 - [x] Repositório público + README completo
-- [x] `docs/proposta.md` (≤3 pág.)
+- [x] `sprints/0/proposta.md` (≤3 pág.)
 - [x] GitHub Projects com ≥5 itens, ≥3 estimados
 - [x] Coorte declarada (A=presencial / B=online)
 - [ ] Integração com outra disciplina declarada (se houver)
